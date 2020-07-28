@@ -1,14 +1,18 @@
 package com.thoughtworks.springbootemployee.model;
 
+import java.util.List;
+
 public class Company {
     private int companyId;
-    private int page;
-    private int pageSize;
+    private String companyName;
+    private int employeesNumber;
+    private List<Employee> employees;
 
-    public Company(int companyId, int page, int pageSize) {
+    public Company(int companyId, String companyName, int employeesNumber, List<Employee> employees) {
         this.companyId = companyId;
-        this.page = page;
-        this.pageSize = pageSize;
+        this.companyName = companyName;
+        this.employeesNumber = employeesNumber;
+        this.employees = employees;
     }
 
     public int getCompanyId() {
@@ -19,19 +23,27 @@ public class Company {
         this.companyId = companyId;
     }
 
-    public int getPage() {
-        return page;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setPage(int page) {
-        this.page = page;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public int getEmployeesNumber() {
+        return employeesNumber;
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public void setEmployeesNumber(int employeesNumber) {
+        this.employeesNumber = employeesNumber;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 }
