@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -84,5 +85,19 @@ public class CompanyServiceTest {
 
         //then
         assertEquals(company.getCompanyName(), actualCompany.getCompanyName());
+    }
+
+    @Test
+    void should_return_company_when_update_company_given_company_Id_and_company() {
+        //given
+        Company company = new Company(1, "alibaba", 200, null);
+        Company updateCompany = new Company(1, "xiaomi", 100, null);
+        given(mockedCompanyRepository.findById(1)).willReturn(Optional.of(company));
+        given(mockedCompanyRepository.save(updateCompany)).willReturn(updateCompany);
+        //when
+        companyService.updateCompany(1, updateCompany);
+        //then
+        assertEquals(company.getCompanyName(), updateCompany.getCompanyName());
+
     }
 }
