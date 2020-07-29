@@ -1,53 +1,67 @@
 package com.thoughtworks.springbootemployee;
 
+import com.thoughtworks.springbootemployee.dao.CompanyRepository;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.CompanyService;
-
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 public class CompanyServiceTest {
+//    @InjectMock
+
     @Test
     void should_return_company_list_when_getAllCompanies() {
         //given
-
+        CompanyRepository mockedCompanyRepository = mock(CompanyRepository.class);
         //when
-        CompanyService companyService = new CompanyService();
-        List<Company> companies = companyService.findAllCompanies();
+        CompanyService companyService = new CompanyService(mockedCompanyRepository);
+        List<Company> companies = new ArrayList<>();
+        companies.add(new Company(1, "alibaba", 100, null));
+        companies.add(new Company(2, "alibaba", 100, null));
+        given(mockedCompanyRepository.getAllCompanies()).willReturn(companies);
+        List<Company> actualCompanies = companyService.findAllCompanies();
         //then
-        assertNotNull(companies);
+        assertNotEquals(0, actualCompanies.size());
     }
 
     @Test
     void should_return_company_when_get_company_by_id_given_company_id() {
         //given
+        CompanyRepository mockedCompanyRepository = mock(CompanyRepository.class);
+
+        CompanyService companyService = new CompanyService(mockedCompanyRepository);
+        Company company = new Company(1, "alibaba", 100, null);
+        given(mockedCompanyRepository.findById(1)).willReturn(company);
         int companyId = 1;
-        CompanyService companyService = new CompanyService();
-
         //when
-        Company company = companyService.getCompanyById(companyId);
-
+        Company actualCompany = companyService.getCompanyById(companyId);
         //then
-        assertNotNull(company);
+        assertEquals(company.getCompanyId(), actualCompany.getCompanyId());
 
     }
 
     @Test
-    void should_return_all_employee_of_company_when_get_all_employee_given_company_id () {
+    void should_return_all_employee_of_company_when_get_all_employee_given_company_id() {
         //given
-        int companyId=1;
-        CompanyService companyService=new CompanyService();
+        CompanyRepository mockedCompanyRepository = mock(CompanyRepository.class);
+        CompanyService companyService = new CompanyService(mockedCompanyRepository);
+        int companyId = 1;
+        List<Employee> employees = new ArrayList<>();
+        employees.add(new Employee(1, "alibaba1", 20, "male", 6000));
+        employees.add(new Employee(2, "alibaba2", 20, "female", 6000));
+        given(mockedCompanyRepository.getEmployeesById(1)).willReturn(employees);
         //when
-        List<Employee> employees=companyService.getAllEmployeeOfCompany(companyId);
+        List<Employee> actualEmployees = companyService.getAllEmployeeOfCompany(companyId);
         //then
-        assertNotNull(employees);
+        assertEquals(employees, actualEmployees);
 
     }
 }
