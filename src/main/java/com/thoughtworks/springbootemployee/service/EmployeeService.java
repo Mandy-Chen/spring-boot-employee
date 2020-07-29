@@ -1,6 +1,7 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.dao.EmployeeRepository;
+import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,10 @@ public class EmployeeService {
 
     @Autowired
     EmployeeRepository employeeRepository;
+
+    public EmployeeService(EmployeeRepository employeeRepository) {
+        this.employeeRepository=employeeRepository;
+    }
 
     public Employee getEmployeeById(int employeeId) {
         return null;
@@ -26,5 +31,9 @@ public class EmployeeService {
     }
 
     public void deleteEmployeeById(int employeeId) {
+    }
+
+    public List<Company> findAllCompanies() {
+        return null;
     }
 }
