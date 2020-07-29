@@ -3,9 +3,15 @@ package com.thoughtworks.springbootemployee.controller;
 import com.thoughtworks.springbootemployee.Util.DataBase;
 import com.thoughtworks.springbootemployee.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,18 +28,14 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<Employee> getEmployees(@RequestParam(required = false, defaultValue = "0") int pageNum, @RequestParam(required = false, defaultValue = "0") int pageSize, @RequestParam(required = false, defaultValue = "0") String gender) {
+    public List<Employee> getEmployees(Integer pageNum, Integer pageSize, String gender) {
         List<Employee> employees = dataBase.getEmployees();
-        if (!"0".equals(gender))
+        if (gender != null)
             return employees.stream().filter(employee -> gender.equals(employee.getGender())).collect(Collectors.toList());
-        if (0 == pageNum && 0 == pageSize) {
-            return employees;
+        else if (pageNum != null && pageSize != null) {
+            return employees.subList((pageNum - 1) * pageSize, pageNum * pageSize);
         } else {
-            List<Employee> employeesPage = employees.stream().filter(employee -> {
-                int index = employees.indexOf(employee);
-                return index >= pageNum * pageSize - pageSize && index <= pageNum * pageSize - 1;
-            }).collect(Collectors.toList());
-            return employeesPage;
+            return employees;
         }
     }
 
