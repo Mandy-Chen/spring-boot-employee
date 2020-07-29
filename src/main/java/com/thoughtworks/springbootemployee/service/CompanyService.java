@@ -2,6 +2,7 @@ package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.Util.DataBase;
 import com.thoughtworks.springbootemployee.model.Company;
+import com.thoughtworks.springbootemployee.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,9 @@ public class CompanyService {
         DataBase dataBase=new DataBase();
         List<Company> companies=dataBase.getCompanies();
         return companies.stream().filter(company -> company.getCompanyId()==companyId).findFirst().get();
+    }
+
+    public List<Employee> getAllEmployeeOfCompany(int companyId) {
+        return null;
     }
 }
