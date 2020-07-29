@@ -4,6 +4,9 @@ import com.thoughtworks.springbootemployee.dao.EmployeeRepository;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +27,7 @@ public class EmployeeServiceTest {
         employees.add(new Employee(1, "mandy", 18, "female",99999));
         employees.add(new Employee(2, "Austin", 18, "male",99999));
         given(mockedEmployeeRepository.findAll()).willReturn(employees);
-        List<Employee> actualEmployees = employeeService.findAllCompanies();
+        List<Employee> actualEmployees = employeeService.findAllEmployees();
         //then
         assertEquals(2, actualEmployees.size());
     }
