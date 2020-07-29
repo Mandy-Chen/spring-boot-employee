@@ -66,5 +66,13 @@ public class CompanyService {
     }
 
     public void deleteEmployeesOfCompanyById(Integer companyId) {
+        if(companyId != null) {
+            Optional<Company> optionalCompany = companyRepository.findById(companyId);
+            if(optionalCompany.isPresent()) {
+                Company company = optionalCompany.get();
+                company.setEmployees(null);
+                companyRepository.save(company);
+            }
+        }
     }
 }
