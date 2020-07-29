@@ -40,9 +40,10 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public void addEmployee(@RequestBody Employee employee) {
+    public Employee addEmployee(@RequestBody Employee employee) {
         List<Employee> employees = dataBase.getEmployees();
         employees.add(employee);
+        return employee;
     }
 
     @PutMapping("/{employeeId}")
