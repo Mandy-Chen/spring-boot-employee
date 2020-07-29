@@ -12,7 +12,7 @@ public class DataBase {
 
     private List<Company> companies = new ArrayList<>();
 
-    public List<Company> getCompanies() {
+    public DataBase() {
         List<Employee> employeesA = new ArrayList<>();
         employeesA.add(new Employee(4, "alibaba1", 20, "male", 6000));
         employeesA.add(new Employee(6, "alibaba2", 19, "male", 8000));
@@ -33,6 +33,9 @@ public class DataBase {
         employeesC.add(new Employee(3, "huawei3", 19, "female", 7000));
         Company companyC = new Company(3, "huawei", 100, employeesC);
         this.companies.add(companyC);
+    }
+    
+    public List<Company> getCompanies() {
         return companies;
     }
 
