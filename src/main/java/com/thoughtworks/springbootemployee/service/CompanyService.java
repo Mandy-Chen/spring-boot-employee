@@ -6,8 +6,10 @@ import com.thoughtworks.springbootemployee.model.Employee;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompanyService {
@@ -32,22 +34,14 @@ public class CompanyService {
     }
 
     public Page<Company> getAllCompanies(Integer page, Integer pageSize) {
+
         return companyRepository.findAll(PageRequest.of(page, pageSize));
     }
 
     public Company addCompany(Company company) {
         if(company != null) {
-            companyRepository.save(company);
+            return companyRepository.save(company);
         }
-        return null;
-    }
-
-    public Company updateCompany(Company company) {
-        return null;
-    }
-
-    public String deleteEmployeesOfCompanyById(int companyId) {
-        companyRepository.deleteById(companyId);
         return null;
     }
 }
