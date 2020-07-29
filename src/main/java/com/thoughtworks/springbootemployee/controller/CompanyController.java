@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
+import java.util.List;
 
 
 @RestController
@@ -25,28 +25,32 @@ public class CompanyController {
     }
 
     @GetMapping("/{companyId}/employees")
+    @ResponseStatus(HttpStatus.OK)
     public List<Employee> getAllEmployees(@PathVariable int companyId) {
         return companyService.getAllEmployeeOfCompany(companyId);
     }
 
     @GetMapping
-    public Page<Company> getAllCompanies(Integer page, Integer pageSize) {
+    @ResponseStatus(HttpStatus.OK)
+    public Page<Company> getAllCompanies(@RequestParam(required = false, defaultValue = "0") Integer page, @RequestParam(required = false, defaultValue = "0") Integer pageSize) {
         return companyService.getAllCompanies(page, pageSize);
     }
 
-
     @PostMapping
+    @ResponseStatus(HttpStatus.OK)
     public Company addCompany(@RequestBody Company company) {
         return companyService.addCompany(company);
     }
 
     @PutMapping("/{companyId}")
-    public Company updateCompany(@RequestBody Company company) {
-        return companyService.updateCompany(company);
+    @ResponseStatus(HttpStatus.OK)
+    public Company updateCompany(@PathVariable Integer companyId, @RequestBody Company company) {
+        return companyService.updateCompany(companyId, company);
     }
 
     @DeleteMapping("/{companyId}")
-    public String deleteEmployeesOfCompanyById(@PathVariable int companyId) {
-        return companyService.deleteEmployeesOfCompanyById(companyId);
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteEmployeesOfCompanyById(@PathVariable Integer companyId) {
+        companyService.deleteEmployeesOfCompanyById(companyId);
     }
 }
