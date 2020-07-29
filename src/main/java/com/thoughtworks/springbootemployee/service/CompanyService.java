@@ -44,4 +44,27 @@ public class CompanyService {
         }
         return null;
     }
+
+    public Company updateCompany(Integer companyId, Company company) {
+        if(company != null && company != null) {
+            Optional<Company> optionalCompany = companyRepository.findById(companyId);
+            if(optionalCompany.isPresent()) {
+                Company companyInfo = optionalCompany.get();
+                if(!StringUtils.isEmpty(companyInfo.getCompanyName())) {
+                    companyInfo.setCompanyName(company.getCompanyName());
+                }
+                if(!StringUtils.isEmpty(companyInfo.getEmployeesNumber())) {
+                    companyInfo.setEmployeesNumber(company.getEmployeesNumber());
+                }
+                if(!StringUtils.isEmpty(companyInfo.getEmployees())) {
+                    companyInfo.setEmployees(companyInfo.getEmployees());
+                }
+                return companyRepository.save(companyInfo);
+            }
+        }
+        return null;
+    }
+
+    public void deleteEmployeesOfCompanyById(Integer companyId) {
+    }
 }
