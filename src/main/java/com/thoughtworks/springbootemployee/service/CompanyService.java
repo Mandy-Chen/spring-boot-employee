@@ -15,4 +15,8 @@ public class CompanyService {
         DataBase dataBase = new DataBase();
         return dataBase.getCompanies();
     }
+
+    public Company getCompanyById(int companyId) {
+        return null;
+    }
 }

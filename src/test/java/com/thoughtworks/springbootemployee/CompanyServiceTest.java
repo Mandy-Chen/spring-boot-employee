@@ -23,4 +23,19 @@ public class CompanyServiceTest {
         //then
         assertNotNull(companies);
     }
+
+    @Test
+    void should_return_company_when_get_company_by_id_given_company_id() {
+        //given
+        int companyId = 1;
+        CompanyService companyService = new CompanyService();
+
+        //when
+        Company company = companyService.getCompanyById(companyId);
+
+        //then
+        assertNotNull(company);
+
+    }
+
 }
