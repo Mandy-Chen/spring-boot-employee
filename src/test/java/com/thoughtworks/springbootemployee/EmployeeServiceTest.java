@@ -1,10 +1,7 @@
 package com.thoughtworks.springbootemployee;
 
-import com.thoughtworks.springbootemployee.dao.CompanyRepository;
 import com.thoughtworks.springbootemployee.dao.EmployeeRepository;
-import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
-import com.thoughtworks.springbootemployee.service.CompanyService;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +11,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 public class EmployeeServiceTest {
     EmployeeRepository mockedEmployeeRepository = mock(EmployeeRepository.class);
@@ -40,6 +37,63 @@ public class EmployeeServiceTest {
         Employee actualEmploy = employeeService.getEmployeeById(1);
         //then
         assertEquals(Optional.of(employee).get().getId(), actualEmploy.getId());
+    }
 
+    @Test
+    void should_return_employee_list_when_getAllEmployees_given_page_and_pageSize() {
+        //given
+        List<Employee> employees = new ArrayList<>();
+        employees.add(new Employee(1, "mandy", 18, "female", 99999));
+        employees.add(new Employee(2, "Austin", 18, "male", 99999));
+        given(mockedEmployeeRepository.findAll(PageRequest.of(1, 2))).willReturn(new PageImpl<Employee>(employees));
+        //when
+        Page<Employee> actualEmployees = employeeService.getAllEmployees(1, 2);
+        //then
+        assertEquals(new PageImpl<Employee>(employees), actualEmployees);
+    }
+    @Test
+    void should_return_all_male_employees_when_getAllEmployees_given_gender_is_male() {
+        //given
+        List<Employee> employees = new ArrayList<>();
+        employees.add(new Employee(1, "mandy", 18, "female", 99999));
+        employees.add(new Employee(2, "Austin", 18, "male", 99999));
+        employees.add(new Employee(3, "other", 18, "male", 99999));
+        given(mockedEmployeeRepository.findAllByGender("male")).willReturn(employees);
+        //when
+        List<Employee> actualEmployees = employeeService.getEmployeeByGender("male");
+        //then
+        assertEquals(employees, actualEmployees);
+    }
+    @Test
+    void should_return_employ_when_add_employee_given_employee() {
+        //given
+        Employee employee = new Employee(1, "mandy", 18, "female", 99999);
+        given(mockedEmployeeRepository.save(employee)).willReturn(employee);
+        //when
+        Employee addedEmployee = employeeService.addEmployee(employee);
+        //then
+        assertEquals(employee, addedEmployee);
+    }
+    @Test
+    void should_return_employee_when_update_employee_given_employee() {
+        //given
+        Employee employee = new Employee(1, "mandy", 18, "female", 66666);
+        Employee updateEmployee = new Employee(1, "mandy", 18, "female", 66666);
+        given(mockedEmployeeRepository.findById(1)).willReturn(Optional.of(employee));
+        given(mockedEmployeeRepository.save(updateEmployee)).willReturn(updateEmployee);
+        //when
+        employeeService.updateEmployee(1, updateEmployee);
+        //the
+        assertEquals(employee.getId(), updateEmployee.getId());
+    }
+    @Test
+    void should_return_nothing_when_delete_employee_given_employeeId() {
+        //given
+        Employee employee = new Employee(1, "mandy", 18, "female", 66666);
+        given(mockedEmployeeRepository.findById(1)).willReturn(Optional.of(employee));
+        //when
+        employeeService.deleteEmployeeById(1);
+        //then
+        verify(mockedEmployeeRepository,times(1)).deleteById(1);
     }
 }
