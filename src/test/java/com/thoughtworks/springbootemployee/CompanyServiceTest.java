@@ -69,8 +69,20 @@ public class CompanyServiceTest {
         companies.add(new Company(2, "alibaba2", 100, null));
         given(mockedCompanyRepository.findAll(PageRequest.of(1, 2))).willReturn(new PageImpl<Company>(companies));
         //when
-        Page<Company> actualCompanies=companyService.getAllCompanies(1,2);
+        Page<Company> actualCompanies = companyService.getAllCompanies(1, 2);
         //then
-        assertEquals(new PageImpl<Company>(companies),actualCompanies);
+        assertEquals(new PageImpl<Company>(companies), actualCompanies);
+    }
+
+    @Test
+    void should_return_company_when_add_company_given_company() {
+        //given
+        Company company = new Company(1, "alibaba", 200, null);
+        given(mockedCompanyRepository.save(company)).willReturn(company);
+        //when
+        Company actualCompany = companyService.addCompany(company);
+
+        //then
+        assertEquals(company.getCompanyName(), actualCompany.getCompanyName());
     }
 }
