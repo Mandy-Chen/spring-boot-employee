@@ -58,9 +58,10 @@ public class EmployeeController {
     }
 
     @DeleteMapping("{employeeId}")
-    public void deleteEmployeeByEmployeeId(@PathVariable int employeeId) {
+    public String deleteEmployeeByEmployeeId(@PathVariable int employeeId) {
         List<Employee> employees = dataBase.getEmployees();
         Employee employee = employees.stream().filter(tempEmployee -> employeeId == tempEmployee.getId()).findFirst().get();
         employees.remove(employee);
+        return "delete success";
     }
 }
