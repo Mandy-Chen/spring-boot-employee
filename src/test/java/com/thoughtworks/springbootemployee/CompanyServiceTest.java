@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -98,6 +99,19 @@ public class CompanyServiceTest {
         companyService.updateCompany(1, updateCompany);
         //then
         assertEquals(company.getCompanyName(), updateCompany.getCompanyName());
+    }
 
+    @Test
+    void should_delete_all_employees_belong_to_company_when_delete_employees_of_company_by_id_given_company_id() {
+        //given
+        List<Employee> employees = new ArrayList<>();
+        employees.add(new Employee(1,"ming",10,"male",7000));
+        Company company = new Company(1, "alibaba", 200, employees);
+        given(mockedCompanyRepository.findById(1)).willReturn(Optional.of(company));
+        given(mockedCompanyRepository.save(company)).willReturn(company);
+        //when
+        companyService.deleteEmployeesOfCompanyById(1);
+        //then
+        assertNull(company.getEmployees());
     }
 }
