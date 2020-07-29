@@ -9,10 +9,13 @@ import java.util.List;
 
 @Component
 public class DataBase {
-
+    List<Employee> employees = new ArrayList<>();
     private List<Company> companies = new ArrayList<>();
 
     public DataBase() {
+        employees.add(new Employee(1, "alibaba1", 20, "male", 6000));
+        employees.add(new Employee(2, "alibaba2", 20, "female", 6000));
+
         List<Employee> employeesA = new ArrayList<>();
         employeesA.add(new Employee(4, "alibaba1", 20, "male", 6000));
         employeesA.add(new Employee(6, "alibaba2", 19, "male", 8000));
@@ -41,5 +44,9 @@ public class DataBase {
 
     public void setCompanies(List<Company> companies) {
         this.companies = companies;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
     }
 }
