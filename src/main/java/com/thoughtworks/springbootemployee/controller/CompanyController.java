@@ -1,19 +1,14 @@
 package com.thoughtworks.springbootemployee.controller;
 
-import com.thoughtworks.springbootemployee.Util.DataBase;
 import com.thoughtworks.springbootemployee.model.Company;
-
 import com.thoughtworks.springbootemployee.model.Employee;
+import com.thoughtworks.springbootemployee.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-
-import javax.websocket.server.PathParam;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 @RestController
@@ -21,61 +16,37 @@ import java.util.stream.Collectors;
 public class CompanyController {
 
     @Autowired
-    DataBase dataBase;
+    CompanyService companyService;
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{companyId}")
     public Company getCompanyByCompanyId(@PathVariable int companyId) {
-        List<Company> companies = dataBase.getCompanies();
-        for(Company company : companies) {
-            if(company.getCompanyId() == companyId) {
-                return company;
-            }
-        }
-        return null;
+        return companyService.getCompanyById(companyId);
     }
 
     @GetMapping("/{companyId}/employees")
     public List<Employee> getAllEmployees(@PathVariable int companyId) {
-        List<Company> companies = dataBase.getCompanies();
-        for(Company company : companies) {
-            if(company.getCompanyId() == companyId) {
-                return company.getEmployees();
-            }
-        }
-        return null;
+        return companyService.getAllEmployeeOfCompany(companyId);
     }
 
     @GetMapping
-    public List<Company> getAllCompanies(Integer page, Integer pageSize) {
-        if(page != null && pageSize != null) {
-            List<Company> companies = dataBase.getCompanies();
-            return companies.subList((page-1)*(pageSize), page*pageSize);
-        }
-        return dataBase.getCompanies();
+    public Page<Company> getAllCompanies(Integer page, Integer pageSize) {
+        return companyService.getAllCompanies(page, pageSize);
     }
 
 
     @PostMapping
-    public void addCompany(@RequestBody Company company) {
-        List<Company> companies = dataBase.getCompanies();
-        companies.add(company);
+    public Company addCompany(@RequestBody Company company) {
+        return companyService.addCompany(company);
     }
 
     @PutMapping("/{companyId}")
-    public void updateCompany(@RequestBody Company companyInfo) {
-        List<Company> companies = dataBase.getCompanies();
-        Company updateCompany = companies.stream().filter(company -> company.getCompanyId() == companyInfo.getCompanyId()).findFirst().get();
-        updateCompany.setCompanyId(companyInfo.getCompanyId());
-        updateCompany.setEmployees(companyInfo.getEmployees());
-        updateCompany.setEmployeesNumber(companyInfo.getEmployeesNumber());
-        updateCompany.setCompanyName(companyInfo.getCompanyName());
+    public Company updateCompany(@RequestBody Company company) {
+        return companyService.updateCompany(company);
     }
 
     @DeleteMapping("/{companyId}")
-    public void deleteCompany(@PathVariable int companyId) {
-        List<Company> companies = dataBase.getCompanies();
-        Company deleteCompany = companies.stream().filter(company -> company.getCompanyId() == companyId).findFirst().get();
-        deleteCompany.getEmployees().clear();
+    public String deleteEmployeesOfCompanyById(@PathVariable int companyId) {
+        return companyService.deleteEmployeesOfCompanyById(companyId);
     }
 }

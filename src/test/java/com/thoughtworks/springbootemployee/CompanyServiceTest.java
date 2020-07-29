@@ -5,77 +5,72 @@ import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.CompanyService;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 public class CompanyServiceTest {
-//    @InjectMock
+    CompanyRepository mockedCompanyRepository = mock(CompanyRepository.class);
+    CompanyService companyService = new CompanyService(mockedCompanyRepository);
 
     @Test
     void should_return_company_list_when_getAllCompanies() {
-        //given
-        CompanyRepository mockedCompanyRepository = mock(CompanyRepository.class);
         //when
-        CompanyService companyService = new CompanyService(mockedCompanyRepository);
         List<Company> companies = new ArrayList<>();
         companies.add(new Company(1, "alibaba", 100, null));
         companies.add(new Company(2, "alibaba", 100, null));
-        given(mockedCompanyRepository.getAllCompanies()).willReturn(companies);
+        given(mockedCompanyRepository.findAll()).willReturn(companies);
         List<Company> actualCompanies = companyService.findAllCompanies();
         //then
-        assertNotEquals(0, actualCompanies.size());
+        assertEquals(2, actualCompanies.size());
     }
 
     @Test
     void should_return_company_when_get_company_by_id_given_company_id() {
         //given
-        CompanyRepository mockedCompanyRepository = mock(CompanyRepository.class);
-
-        CompanyService companyService = new CompanyService(mockedCompanyRepository);
         Company company = new Company(1, "alibaba", 100, null);
-        given(mockedCompanyRepository.findById(1)).willReturn(company);
-        int companyId = 1;
+        given(mockedCompanyRepository.findById(1)).willReturn(Optional.of(company));
+
         //when
-        Company actualCompany = companyService.getCompanyById(companyId);
+        Company actualCompany = companyService.getCompanyById(1);
         //then
-        assertEquals(company.getCompanyId(), actualCompany.getCompanyId());
+        assertEquals(Optional.of(company).get().getCompanyId(), actualCompany.getCompanyId());
 
     }
 
     @Test
     void should_return_all_employee_of_company_when_get_all_employee_given_company_id() {
         //given
-        CompanyRepository mockedCompanyRepository = mock(CompanyRepository.class);
-        CompanyService companyService = new CompanyService(mockedCompanyRepository);
-        int companyId = 1;
         List<Employee> employees = new ArrayList<>();
         employees.add(new Employee(1, "alibaba1", 20, "male", 6000));
         employees.add(new Employee(2, "alibaba2", 20, "female", 6000));
-        given(mockedCompanyRepository.getEmployeesById(1)).willReturn(employees);
+        Company company = new Company(1, "alibaba", 100, employees);
+        given(mockedCompanyRepository.findById(1)).willReturn(Optional.of(company));
         //when
-        List<Employee> actualEmployees = companyService.getAllEmployeeOfCompany(companyId);
+        List<Employee> actualEmployees = companyService.getAllEmployeeOfCompany(1);
         //then
-        assertEquals(employees, actualEmployees);
+        assertEquals(company.getEmployees(), actualEmployees);
 
     }
 
     @Test
     void should_return_company_list_when_getAllCompanies_given_page_and_pageSize() {
-        CompanyRepository mockedCompanyRepository = mock(CompanyRepository.class);
-        CompanyService companyService = new CompanyService(mockedCompanyRepository);
+        //given
         List<Company> companies = new ArrayList<>();
         companies.add(new Company(1, "alibaba1", 100, null));
         companies.add(new Company(2, "alibaba2", 100, null));
-        given(mockedCompanyRepository.getAllCompanies(1, 2)).willReturn(companies);
+        given(mockedCompanyRepository.findAll(PageRequest.of(1, 2))).willReturn(new PageImpl<Company>(companies));
         //when
-        List<Company> actualCompanies=companyService.getAllCompanies(1,2);
+        Page<Company> actualCompanies=companyService.getAllCompanies(1,2);
         //then
-        assertEquals(companies,actualCompanies);
+        assertEquals(new PageImpl<Company>(companies),actualCompanies);
     }
 }
