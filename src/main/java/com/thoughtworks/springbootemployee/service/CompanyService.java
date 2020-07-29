@@ -17,6 +17,8 @@ public class CompanyService {
     }
 
     public Company getCompanyById(int companyId) {
-        return null;
+        DataBase dataBase=new DataBase();
+        List<Company> companies=dataBase.getCompanies();
+        return companies.stream().filter(company -> company.getCompanyId()==companyId).findFirst().get();
     }
 }
