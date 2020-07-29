@@ -10,8 +10,10 @@ import java.util.List;
 @Repository
 public class CompanyRepository {
     public List<Company> getAllCompanies() {
-        DataBase dataBase = new DataBase();
-        return dataBase.getCompanies();
+        return null;
+    }
+    public List<Company> getAllCompanies(int page,int pageSize) {
+        return null;
     }
 
     public Company findById(int companyId) {

@@ -64,4 +64,18 @@ public class CompanyServiceTest {
         assertEquals(employees, actualEmployees);
 
     }
+
+    @Test
+    void should_return_company_list_when_getAllCompanies_given_page_and_pageSize() {
+        CompanyRepository mockedCompanyRepository = mock(CompanyRepository.class);
+        CompanyService companyService = new CompanyService(mockedCompanyRepository);
+        List<Company> companies = new ArrayList<>();
+        companies.add(new Company(1, "alibaba1", 100, null));
+        companies.add(new Company(2, "alibaba2", 100, null));
+        given(mockedCompanyRepository.getAllCompanies(1, 2)).willReturn(companies);
+        //when
+        List<Company> actualCompanies=companyService.getAllCompanies(1,2);
+        //then
+        assertEquals(companies,actualCompanies);
+    }
 }
