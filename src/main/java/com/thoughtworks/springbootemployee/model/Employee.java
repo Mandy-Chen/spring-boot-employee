@@ -7,6 +7,9 @@ public class Employee {
     private String gender;
     private double salary;
 
+    public Employee() {
+    }
+
     public int getId() {
         return id;
     }

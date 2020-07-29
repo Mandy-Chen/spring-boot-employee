@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.websocket.server.PathParam;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,14 +45,12 @@ public class CompanyController {
     }
 
     @GetMapping
-    public List<Company> getPaginateCompanies(@RequestParam Integer page, @RequestParam Integer pageSize) {
+    public List<Company> getAllCompanies(Integer page, Integer pageSize) {
         if(page != null && pageSize != null) {
             List<Company> companies = dataBase.getCompanies();
-            return companies.stream().filter(company ->
-                    companies.indexOf(company) >= page - 1 && companies.indexOf(company) <= pageSize - 1
-            ).collect(Collectors.toList());
+            return companies.subList((page-1)*(pageSize), page*pageSize);
         }
-        return null;
+        return dataBase.getCompanies();
     }
 
 
@@ -58,33 +58,22 @@ public class CompanyController {
     public void addCompany(@RequestBody Company company) {
         List<Company> companies = dataBase.getCompanies();
         companies.add(company);
-        dataBase.setCompanies(companies);
     }
 
     @PutMapping("/{companyId}")
     public void updateCompany(@RequestBody Company companyInfo) {
         List<Company> companies = dataBase.getCompanies();
-        for(Company company : companies) {
-            if(company.getCompanyId() == companyInfo.getCompanyId()) {
-                company.setCompanyId(companyInfo.getCompanyId());
-                company.setCompanyName(companyInfo.getCompanyName());
-                company.setEmployees(companyInfo.getEmployees());
-                company.setEmployeesNumber(companyInfo.getEmployeesNumber());
-                companies.add(company);
-                dataBase.setCompanies(companies);
-            }
-        }
+        Company updateCompany = companies.stream().filter(company -> company.getCompanyId() == companyInfo.getCompanyId()).findFirst().get();
+        updateCompany.setCompanyId(companyInfo.getCompanyId());
+        updateCompany.setEmployees(companyInfo.getEmployees());
+        updateCompany.setEmployeesNumber(companyInfo.getEmployeesNumber());
+        updateCompany.setCompanyName(companyInfo.getCompanyName());
     }
 
     @DeleteMapping("/{companyId}")
     public void deleteCompany(@PathVariable int companyId) {
         List<Company> companies = dataBase.getCompanies();
-        for(int i=0;i<companies.size();i++) {
-            if(companies.get(i).getCompanyId() == companyId) {
-                companies.remove(i);
-                i--;
-                dataBase.setCompanies(companies);
-            }
-        }
+        Company deleteCompany = companies.stream().filter(company -> company.getCompanyId() == companyId).findFirst().get();
+        deleteCompany.getEmployees().clear();
     }
 }
