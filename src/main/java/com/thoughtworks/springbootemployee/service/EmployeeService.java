@@ -33,7 +33,7 @@ public class EmployeeService {
     public void deleteEmployeeById(int employeeId) {
     }
 
-    public List<Company> findAllCompanies() {
-        return null;
+    public List<Employee> findAllCompanies() {
+        return employeeRepository.findAll();
     }
 }
