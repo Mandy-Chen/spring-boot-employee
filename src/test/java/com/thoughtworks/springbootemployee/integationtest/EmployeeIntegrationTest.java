@@ -9,12 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -123,4 +125,23 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$[0].companyId").value(savedCompany.getCompanyId()));
     }
 
+    @Test
+    void should_return_employee_when_hit_post_employee_endpoint_given_employee() throws Exception {
+        //given
+        Company savedCompany = companyRepository.save(new Company(1, "oocl", 0, emptyList()));
+        //when
+        ResultActions resultActions = mockMvc.perform(post("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{ \"id\": 0, \"name\": \"test\", \"age\": 18, \"gender\": \"male\", \"salary\": 4000.0, \"companyId\": %s }",
+                        savedCompany.getCompanyId())));
+
+        //then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.name").value("test"))
+                .andExpect(jsonPath("$.age").value(18))
+                .andExpect(jsonPath("$.gender").value("male"))
+                .andExpect(jsonPath("$.salary").value(4000.0))
+                .andExpect(jsonPath("$.companyId").value(savedCompany.getCompanyId()));
+    }
 }
