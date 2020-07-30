@@ -74,4 +74,31 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$.salary").value(9999))
                 .andExpect(jsonPath("$.companyId").value(savedCompany.getCompanyId()));
     }
+
+
+    @Test
+    void should_get_employees_by_page_when_hit_get_employee_by_page_endpoint_given_page_and_pageSize() throws Exception {
+        //given
+        int page = 1;
+        int pageSize = 2;
+        Company company = new Company(1, "oocl", 0, emptyList());
+        Company savedCompany = companyRepository.save(company);
+        Employee employee = new Employee(0, "chen", 18, "female", 9999, savedCompany.getCompanyId());
+        employeeRepository.save(employee);
+        //when
+        ResultActions resultActions = mockMvc.perform(get(String.format("/employees?page=%d&pageSize=%d", page, pageSize)));
+
+        //then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPages").value(1))
+                .andExpect(jsonPath("$.number").value(page - 1))
+                .andExpect(jsonPath("$.size").value(pageSize))
+                .andExpect(jsonPath("$.content[0].id").isNumber())
+                .andExpect(jsonPath("$.content[0].name").value("chen"))
+                .andExpect(jsonPath("$.content[0].age").value(18))
+                .andExpect(jsonPath("$.content[0].gender").value("female"))
+                .andExpect(jsonPath("$.content[0].salary").value(9999))
+                .andExpect(jsonPath("$.content[0].companyId").value(savedCompany.getCompanyId()));
+    }
+
 }
