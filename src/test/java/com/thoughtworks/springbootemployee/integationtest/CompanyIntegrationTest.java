@@ -37,10 +37,8 @@ public class CompanyIntegrationTest {
     @Test
     void should_get_all_companies_when_hit_get_all_companies_endpoint_given_nothing() throws Exception {
         //given
-        Company company = new Company(1, "oocl", 0, emptyList());
-        Company savedCompany = companyRepository.save(company);
-        Employee employee = new Employee(0, "chen", 18, "female", 9999, savedCompany.getCompanyId());
-        employeeRepository.save(employee);
+        Company company = companyRepository.save(new Company(1, "oocl", 0, emptyList()));
+        Employee employee = employeeRepository.save(new Employee(0, "chen", 18, "female", 9999, company.getCompanyId()));
         //when
         ResultActions resultActions = mockMvc.perform(get("/companies"));
 
@@ -55,6 +53,28 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$[0].employees[0].age").value(18))
                 .andExpect(jsonPath("$[0].employees[0].gender").value("female"))
                 .andExpect(jsonPath("$[0].employees[0].salary").value(9999))
-                .andExpect(jsonPath("$[0].employees[0].companyId").value(savedCompany.getCompanyId()));
+                .andExpect(jsonPath("$[0].employees[0].companyId").value(company.getCompanyId()));
     }
+
+    @Test
+    void should_get_company_by_id_when_hit_get_company_by_id_endpoint_given_company_id() throws Exception {
+        //given
+        Company company = companyRepository.save(new Company(1, "oocl", 0, emptyList()));
+        Employee employee = employeeRepository.save(new Employee(0, "chen", 18, "female", 9999, company.getCompanyId()));
+        //when
+        ResultActions resultActions = mockMvc.perform(get("/companies/" + company.getCompanyId()));
+
+        //then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.companyId").value(company.getCompanyId()))
+                .andExpect(jsonPath("$.companyName").value(company.getCompanyName()))
+                .andExpect(jsonPath("$.employeesNumber").value(company.getEmployeesNumber()))
+                .andExpect(jsonPath("$.employees[0].id").isNumber())
+                .andExpect(jsonPath("$.employees[0].name").value("chen"))
+                .andExpect(jsonPath("$.employees[0].age").value(18))
+                .andExpect(jsonPath("$.employees[0].gender").value("female"))
+                .andExpect(jsonPath("$.employees[0].salary").value(9999))
+                .andExpect(jsonPath("$.employees[0].companyId").value(company.getCompanyId()));
+    }
+
 }
