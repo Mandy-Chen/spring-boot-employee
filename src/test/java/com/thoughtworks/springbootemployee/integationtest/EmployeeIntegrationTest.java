@@ -101,4 +101,26 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$.content[0].companyId").value(savedCompany.getCompanyId()));
     }
 
+    @Test
+    void should_get_employees_by_gender_when_hit_get_employee_by_gender_endpoint_given_female() throws Exception {
+        //given
+        String gender = "female";
+        Company company = new Company(1, "oocl", 0, emptyList());
+        Company savedCompany = companyRepository.save(company);
+        Employee employee = new Employee(0, "chen", 18, "female", 9999, savedCompany.getCompanyId());
+        employeeRepository.save(employee);
+        //when
+        ResultActions resultActions = mockMvc.perform(get(String.format("/employees?gender=%s", gender)));
+
+        //then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id").isNumber())
+                .andExpect(jsonPath("$[0].name").value("chen"))
+                .andExpect(jsonPath("$[0].age").value(18))
+                .andExpect(jsonPath("$[0].gender").value(gender))
+                .andExpect(jsonPath("$[0].salary").value(9999))
+                .andExpect(jsonPath("$[0].companyId").value(savedCompany.getCompanyId()));
+    }
+
 }
