@@ -9,12 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -103,5 +105,43 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.content[0].employees[0].companyId").value(company.getCompanyId()));
     }
 
-   
+    @Test
+    void should_return_company_when_hit_put_update_company_endpoint_given_company_and_companyId() throws Exception {
+        //given
+        Company company = companyRepository.save(new Company(1, "oocl", 0, emptyList()));
+        Employee employee = employeeRepository.save(new Employee(0, "chen", 18, "female", 9999, company.getCompanyId()));
+        //when
+        ResultActions resultActions = mockMvc.perform(put("/companies/" + company.getCompanyId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format(" {\n" +
+                                "            \"companyId\": %s,\n" +
+                                "                \"companyName\": \"csuft\",\n" +
+                                "                \"employeesNumber\": 100,\n" +
+                                "                \"employees\": [\n" +
+                                "            {\n" +
+                                "                \"id\": %s,\n" +
+                                "                    \"name\": \"test\",\n" +
+                                "                    \"age\": 19,\n" +
+                                "                    \"gender\": \"male\",\n" +
+                                "                    \"salary\": 4000.0,\n" +
+                                "                    \"companyId\": %s\n" +
+                                "            }\n" +
+                                "    ]\n" +
+                                "        }",
+                        company.getCompanyId(), employee.getId(), company.getCompanyId())));
+
+        //then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.companyId").value(company.getCompanyId()))
+                .andExpect(jsonPath("$.companyName").value("csuft"))
+                .andExpect(jsonPath("$.employeesNumber").value(100))
+                .andExpect(jsonPath("$.employees[0].id").value(employee.getId()))
+                .andExpect(jsonPath("$.employees[0].name").value("test"))
+                .andExpect(jsonPath("$.employees[0].age").value(19))
+                .andExpect(jsonPath("$.employees[0].gender").value("male"))
+                .andExpect(jsonPath("$.employees[0].salary").value(4000.0))
+                .andExpect(jsonPath("$.employees[0].companyId").value(company.getCompanyId()));
+    }
+
+
 }

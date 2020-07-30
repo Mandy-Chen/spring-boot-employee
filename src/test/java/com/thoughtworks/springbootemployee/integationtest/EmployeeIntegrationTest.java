@@ -89,7 +89,6 @@ public class EmployeeIntegrationTest {
         employeeRepository.save(employee);
         //when
         ResultActions resultActions = mockMvc.perform(get(String.format("/employees?page=%d&pageSize=%d", page, pageSize)));
-
         //then
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPages").value(1))
