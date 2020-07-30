@@ -15,8 +15,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -104,7 +104,6 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.content[0].employees[0].salary").value(9999))
                 .andExpect(jsonPath("$.content[0].employees[0].companyId").value(company.getCompanyId()));
     }
-
     @Test
     void should_return_company_when_hit_put_update_company_endpoint_given_company_and_companyId() throws Exception {
         //given
@@ -143,5 +142,17 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.employees[0].companyId").value(company.getCompanyId()));
     }
 
+
+    @Test
+    void should_status_is_ok_hit_delete_company_by_id_endpoint_given_company_id() throws Exception {
+        //given
+        Company company = companyRepository.save(new Company(1, "oocl", 0, emptyList()));
+        //when
+        ResultActions resultActions = mockMvc.perform(delete("/companies/" + company.getCompanyId()));
+
+        //then
+        resultActions.andExpect(status().isOk());
+        assertNull(companyRepository.findById(company.getCompanyId()).orElse(null));
+    }
 
 }
