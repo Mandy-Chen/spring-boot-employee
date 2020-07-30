@@ -54,4 +54,24 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$[0].salary").value(9999))
                 .andExpect(jsonPath("$[0].companyId").value(savedCompany.getCompanyId()));
     }
+
+    @Test
+    void should_get_employee_by_id_when_hit_get_employee_by_id_endpoint_given_employee_id() throws Exception {
+        //given
+        Company company = new Company(1, "oocl", 0, emptyList());
+        Company savedCompany = companyRepository.save(company);
+        Employee employee = new Employee(0, "chen", 18, "female", 9999, savedCompany.getCompanyId());
+        employeeRepository.save(employee);
+        //when
+        ResultActions resultActions = mockMvc.perform(get("/employees/1"));
+
+        //then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.name").value("chen"))
+                .andExpect(jsonPath("$.age").value(18))
+                .andExpect(jsonPath("$.gender").value("female"))
+                .andExpect(jsonPath("$.salary").value(9999))
+                .andExpect(jsonPath("$.companyId").value(savedCompany.getCompanyId()));
+    }
 }
