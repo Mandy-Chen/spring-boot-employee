@@ -5,7 +5,6 @@ import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +32,9 @@ public class CompanyController {
     public List<Company> getAllCompanies() {
         return companyService.getAllCompanies();
     }
-    @GetMapping(params = {"page","pageSize"})
-    public Page<Company> getAllCompanies(int page,int pageSize) {
+
+    @GetMapping(params = {"page", "pageSize"})
+    public Page<Company> getAllCompanies(int page, int pageSize) {
         return companyService.getAllCompanies(page, pageSize);
     }
 

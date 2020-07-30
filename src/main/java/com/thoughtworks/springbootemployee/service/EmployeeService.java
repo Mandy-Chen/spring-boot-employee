@@ -1,7 +1,6 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.dao.EmployeeRepository;
-import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,20 +14,24 @@ public class EmployeeService {
 
     @Autowired
     EmployeeRepository employeeRepository;
+
     public EmployeeService(EmployeeRepository employeeRepository) {
-        this.employeeRepository=employeeRepository;
+        this.employeeRepository = employeeRepository;
     }
+
     public Employee getEmployeeById(int employeeId) {
-        return  employeeRepository.findById(employeeId).get();
+        return employeeRepository.findById(employeeId).get();
     }
+
     public Employee addEmployee(Employee employee) {
         return employeeRepository.save(employee);
     }
+
     public Employee updateEmployee(int employeeId, Employee updateEmployee) {
-        Employee employee =employeeRepository.findById(employeeId).orElse(null);
-        if (employee==null){
+        Employee employee = employeeRepository.findById(employeeId).orElse(null);
+        if (employee == null) {
             return null;
-        }else {
+        } else {
             employee.setAge(updateEmployee.getAge());
             employee.setGender(updateEmployee.getGender());
             employee.setName(updateEmployee.getName());
@@ -36,9 +39,11 @@ public class EmployeeService {
             return employeeRepository.save(employee);
         }
     }
+
     public void deleteEmployeeById(int employeeId) {
         employeeRepository.deleteById(employeeId);
     }
+
     public List<Employee> findAllEmployees() {
         return employeeRepository.findAll();
     }
@@ -50,4 +55,10 @@ public class EmployeeService {
     public Page<Employee> getAllEmployees(int page, int pageSize) {
         return employeeRepository.findAll(PageRequest.of(page, pageSize));
     }
+
+    public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll();
+    }
+
+
 }
