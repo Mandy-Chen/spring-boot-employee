@@ -172,6 +172,26 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.companyName").value(company.getCompanyName()))
                 .andExpect(jsonPath("$.employeesNumber").value(company.getEmployeesNumber()));
     }
+//    GET       /companies/1/employees
 
+    @Test
+    void should_return_employees_when_hit_get_employees_endpoint_given_company_id() throws Exception {
+        //given
+        Company company = companyRepository.save(new Company(1, "oocl", 0, emptyList()));
+        Employee employee = employeeRepository.save(new Employee(0, "chen", 18, "female", 9999, company.getCompanyId()));
+        //when
+        ResultActions resultActions = mockMvc.perform(get("/companies/" + company.getCompanyId() + "/employees"));
+
+        //then
+        //then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id").isNumber())
+                .andExpect(jsonPath("$[0].name").value("chen"))
+                .andExpect(jsonPath("$[0].age").value(18))
+                .andExpect(jsonPath("$[0].gender").value("female"))
+                .andExpect(jsonPath("$[0].salary").value(9999))
+                .andExpect(jsonPath("$[0].companyId").value(company.getCompanyId()));
+    }
 
 }
