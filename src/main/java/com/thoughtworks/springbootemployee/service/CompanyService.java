@@ -38,7 +38,10 @@ public class CompanyService {
     }
 
     public Page<Company> getAllCompanies(Integer page, Integer pageSize) {
-        return companyRepository.findAll(PageRequest.of(page, pageSize));
+        if (page < 1 || pageSize < 0) {
+            return null;
+        }
+        return companyRepository.findAll(PageRequest.of(page - 1, pageSize));
     }
 
     public Company addCompany(Company company) {
