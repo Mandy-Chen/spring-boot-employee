@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -29,8 +30,11 @@ public class CompanyService {
     }
 
     public List<Employee> getAllEmployeeOfCompany(int companyId) {
-        Company company = companyRepository.findById(companyId).get();
-        return company.getEmployees();
+        Company company = companyRepository.findById(companyId).orElse(null);
+        if (Objects.nonNull(company)) {
+            return company.getEmployees();
+        }
+        return null;
     }
 
     public Page<Company> getAllCompanies(Integer page, Integer pageSize) {
@@ -45,17 +49,17 @@ public class CompanyService {
     }
 
     public Company updateCompany(Integer companyId, Company company) {
-        if(company != null && company != null) {
+        if (companyId != null && company != null) {
             Optional<Company> optionalCompany = companyRepository.findById(companyId);
-            if(optionalCompany.isPresent()) {
+            if (optionalCompany.isPresent()) {
                 Company companyInfo = optionalCompany.get();
-                if(!StringUtils.isEmpty(companyInfo.getCompanyName())) {
+                if (!StringUtils.isEmpty(companyInfo.getCompanyName())) {
                     companyInfo.setCompanyName(company.getCompanyName());
                 }
-                if(!StringUtils.isEmpty(companyInfo.getEmployeesNumber())) {
+                if (!StringUtils.isEmpty(companyInfo.getEmployeesNumber())) {
                     companyInfo.setEmployeesNumber(company.getEmployeesNumber());
                 }
-                if(!StringUtils.isEmpty(companyInfo.getEmployees())) {
+                if (!StringUtils.isEmpty(companyInfo.getEmployees())) {
                     companyInfo.setEmployees(companyInfo.getEmployees());
                 }
                 return companyRepository.save(companyInfo);

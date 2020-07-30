@@ -16,18 +16,18 @@ public class Company {
     public Company() {
     }
 
-    public Company(int companyId, String companyName, int employeesNumber, List<Employee> employees) {
+    public Company(Integer companyId, String companyName, int employeesNumber, List<Employee> employees) {
         this.companyId = companyId;
         this.companyName = companyName;
         this.employeesNumber = employeesNumber;
         this.employees = employees;
     }
 
-    public int getCompanyId() {
+    public Integer getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(int companyId) {
+    public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
     }
 

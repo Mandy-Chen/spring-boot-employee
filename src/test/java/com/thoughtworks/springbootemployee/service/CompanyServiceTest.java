@@ -1,27 +1,33 @@
-package com.thoughtworks.springbootemployee;
+package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.dao.CompanyRepository;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
-import com.thoughtworks.springbootemployee.service.CompanyService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 
+@ExtendWith(SpringExtension.class)
 public class CompanyServiceTest {
-    CompanyRepository mockedCompanyRepository = mock(CompanyRepository.class);
-    CompanyService companyService = new CompanyService(mockedCompanyRepository);
+    @Mock
+    CompanyRepository mockedCompanyRepository;
+    @InjectMocks
+    CompanyService companyService;
 
     @Test
     void should_return_company_list_when_getAllCompanies() {
@@ -52,8 +58,8 @@ public class CompanyServiceTest {
     void should_return_all_employee_of_company_when_get_all_employee_given_company_id() {
         //given
         List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee(1, "alibaba1", 20, "male", 6000));
-        employees.add(new Employee(2, "alibaba2", 20, "female", 6000));
+        employees.add(new Employee(1, "alibaba1", 20, "male", 6000, 1));
+        employees.add(new Employee(2, "alibaba2", 20, "female", 6000, 1));
         Company company = new Company(1, "alibaba", 100, employees);
         given(mockedCompanyRepository.findById(1)).willReturn(Optional.of(company));
         //when
@@ -105,7 +111,7 @@ public class CompanyServiceTest {
     void should_delete_all_employees_belong_to_company_when_delete_employees_of_company_by_id_given_company_id() {
         //given
         List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee(1,"ming",10,"male",7000));
+        employees.add(new Employee(1, "ming", 10, "male", 7000, 1));
         Company company = new Company(1, "alibaba", 200, employees);
         given(mockedCompanyRepository.findById(1)).willReturn(Optional.of(company));
         given(mockedCompanyRepository.save(company)).willReturn(company);
@@ -113,5 +119,14 @@ public class CompanyServiceTest {
         companyService.deleteEmployeesOfCompanyById(1);
         //then
         assertNull(company.getEmployees());
+    }
+
+    @SpringBootApplication
+    public static class SpringBootEmployeeApplication {
+
+        public static void main(String[] args) {
+            SpringApplication.run(SpringBootEmployeeApplication.class, args);
+        }
+
     }
 }
