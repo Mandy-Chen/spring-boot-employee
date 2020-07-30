@@ -172,7 +172,6 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.companyName").value(company.getCompanyName()))
                 .andExpect(jsonPath("$.employeesNumber").value(company.getEmployeesNumber()));
     }
-//    GET       /companies/1/employees
 
     @Test
     void should_return_employees_when_hit_get_employees_endpoint_given_company_id() throws Exception {

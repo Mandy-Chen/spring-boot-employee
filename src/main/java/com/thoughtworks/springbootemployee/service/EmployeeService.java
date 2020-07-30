@@ -1,6 +1,8 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.dao.EmployeeRepository;
+import com.thoughtworks.springbootemployee.exception.IllegalParameterException;
+import com.thoughtworks.springbootemployee.exception.OperationException;
 import com.thoughtworks.springbootemployee.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class EmployeeService {
@@ -27,10 +30,10 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Employee updateEmployee(int employeeId, Employee updateEmployee) {
+    public Employee updateEmployee(int employeeId, Employee updateEmployee) throws OperationException {
         Employee employee = employeeRepository.findById(employeeId).orElse(null);
-        if (employee == null) {
-            return null;
+        if (Objects.isNull(employee)) {
+            throw new OperationException("Can't found the employee");
         } else {
             employee.setAge(updateEmployee.getAge());
             employee.setGender(updateEmployee.getGender());
@@ -52,9 +55,9 @@ public class EmployeeService {
         return employeeRepository.findAllByGender(gender);
     }
 
-    public Page<Employee> getAllEmployees(int page, int pageSize) {
+    public Page<Employee> getAllEmployees(int page, int pageSize) throws IllegalParameterException {
         if (page < 1 || pageSize < 0) {
-            return null;
+            throw new IllegalParameterException("page need to more than zero and page size can't less than zero");
         }
         return employeeRepository.findAll(PageRequest.of(page - 1, pageSize));
     }

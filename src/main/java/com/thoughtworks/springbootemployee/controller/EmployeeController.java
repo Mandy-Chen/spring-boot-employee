@@ -1,5 +1,7 @@
 package com.thoughtworks.springbootemployee.controller;
 
+import com.thoughtworks.springbootemployee.exception.IllegalParameterException;
+import com.thoughtworks.springbootemployee.exception.OperationException;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,7 @@ public class EmployeeController {
     EmployeeService employeeService;
 
     @GetMapping(params = {"page", "pageSize"})
-    public Page<Employee> getEmployees(int page, int pageSize) {
+    public Page<Employee> getEmployees(int page, int pageSize) throws IllegalParameterException {
         return employeeService.getAllEmployees(page, pageSize);
     }
 
@@ -41,7 +43,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{employeeId}")
-    public Employee updateEmployee(@PathVariable int employeeId, @RequestBody Employee employee) {
+    public Employee updateEmployee(@PathVariable int employeeId, @RequestBody Employee employee) throws OperationException {
         return employeeService.updateEmployee(employeeId, employee);
     }
 

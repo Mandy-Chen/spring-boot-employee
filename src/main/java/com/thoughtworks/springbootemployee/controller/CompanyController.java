@@ -1,5 +1,7 @@
 package com.thoughtworks.springbootemployee.controller;
 
+import com.thoughtworks.springbootemployee.exception.IllegalParameterException;
+import com.thoughtworks.springbootemployee.exception.OperationException;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.CompanyService;
@@ -24,7 +26,7 @@ public class CompanyController {
     }
 
     @GetMapping("/{companyId}/employees")
-    public List<Employee> getAllEmployees(@PathVariable int companyId) {
+    public List<Employee> getAllEmployees(@PathVariable int companyId) throws OperationException {
         return companyService.getAllEmployeeOfCompany(companyId);
     }
 
@@ -34,19 +36,19 @@ public class CompanyController {
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public Page<Company> getAllCompanies(int page, int pageSize) {
+    public Page<Company> getAllCompanies(int page, int pageSize) throws IllegalParameterException {
         return companyService.getAllCompanies(page, pageSize);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Company addCompany(@RequestBody Company company) {
+    public Company addCompany(@RequestBody Company company) throws OperationException {
         return companyService.addCompany(company);
     }
 
     @PutMapping("/{companyId}")
     @ResponseStatus(HttpStatus.OK)
-    public Company updateCompany(@PathVariable Integer companyId, @RequestBody Company company) {
+    public Company updateCompany(@PathVariable Integer companyId, @RequestBody Company company) throws IllegalParameterException {
         return companyService.updateCompany(companyId, company);
     }
 

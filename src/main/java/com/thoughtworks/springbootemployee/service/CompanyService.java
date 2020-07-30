@@ -1,6 +1,8 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.dao.CompanyRepository;
+import com.thoughtworks.springbootemployee.exception.IllegalParameterException;
+import com.thoughtworks.springbootemployee.exception.OperationException;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import org.springframework.data.domain.Page;
@@ -27,29 +29,29 @@ public class CompanyService {
         return companyRepository.findById(companyId).get();
     }
 
-    public List<Employee> getAllEmployeeOfCompany(int companyId) {
+    public List<Employee> getAllEmployeeOfCompany(int companyId) throws OperationException {
         Company company = companyRepository.findById(companyId).orElse(null);
         if (Objects.nonNull(company)) {
             return company.getEmployees();
         }
-        return null;
+        throw new OperationException("Can't found company");
     }
 
-    public Page<Company> getAllCompanies(Integer page, Integer pageSize) {
+    public Page<Company> getAllCompanies(Integer page, Integer pageSize) throws IllegalParameterException {
         if (page < 1 || pageSize < 0) {
-            return null;
+            throw new IllegalParameterException("page need to more than zero and page size can't less than zero");
         }
         return companyRepository.findAll(PageRequest.of(page - 1, pageSize));
     }
 
-    public Company addCompany(Company company) {
+    public Company addCompany(Company company) throws OperationException {
         if (company != null) {
             return companyRepository.save(company);
         }
-        return null;
+        throw new OperationException("Add company fail!");
     }
 
-    public Company updateCompany(Integer companyId, Company company) {
+    public Company updateCompany(Integer companyId, Company company) throws IllegalParameterException {
         if (companyId != null && company != null) {
             Company beforeCompany = companyRepository.findById(companyId).orElse(null);
             if (Objects.nonNull(beforeCompany)) {
@@ -60,7 +62,7 @@ public class CompanyService {
                 return companyRepository.save(beforeCompany);
             }
         }
-        return null;
+        throw new IllegalParameterException("companyId can't be null or don't post a empty info of company");
     }
 
     public void deleteEmployeesOfCompanyById(Integer companyId) {
