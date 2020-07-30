@@ -1,7 +1,9 @@
 package com.thoughtworks.springbootemployee.controller;
 
+import com.thoughtworks.springbootemployee.dto.CompanyRequest;
 import com.thoughtworks.springbootemployee.exception.IllegalParameterException;
 import com.thoughtworks.springbootemployee.exception.OperationException;
+import com.thoughtworks.springbootemployee.mapper.CompanyMapper;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.CompanyService;
@@ -19,6 +21,8 @@ public class CompanyController {
 
     @Autowired
     CompanyService companyService;
+    @Autowired
+    CompanyMapper companyMapper;
 
     @GetMapping("/{companyId}")
     public Company getCompanyByCompanyId(@PathVariable int companyId) {
@@ -42,14 +46,14 @@ public class CompanyController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Company addCompany(@RequestBody Company company) throws OperationException {
-        return companyService.addCompany(company);
+    public Company addCompany(@RequestBody CompanyRequest companyRequest) throws OperationException {
+        return companyService.addCompany(companyMapper.toCompany(companyRequest));
     }
 
     @PutMapping("/{companyId}")
     @ResponseStatus(HttpStatus.OK)
-    public Company updateCompany(@PathVariable Integer companyId, @RequestBody Company company) throws IllegalParameterException {
-        return companyService.updateCompany(companyId, company);
+    public Company updateCompany(@PathVariable Integer companyId, @RequestBody CompanyRequest companyRequest) throws IllegalParameterException {
+        return companyService.updateCompany(companyId, companyMapper.toCompany(companyRequest));
     }
 
     @DeleteMapping("/{companyId}")

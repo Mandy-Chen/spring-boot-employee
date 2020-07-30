@@ -1,6 +1,6 @@
 package com.thoughtworks.springbootemployee.dto;
 
-public class EmployeeRequst {
+public class EmployeeRequest {
     private Integer id;
     private String name;
     private int age;
@@ -8,7 +8,10 @@ public class EmployeeRequst {
     private double salary;
     private Integer companyId;
 
-    public EmployeeRequst(Integer id, String name, int age, String gender, double salary, Integer companyId) {
+    public EmployeeRequest() {
+    }
+
+    public EmployeeRequest(Integer id, String name, int age, String gender, double salary, Integer companyId) {
         this.id = id;
         this.name = name;
         this.age = age;

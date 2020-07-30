@@ -1,7 +1,9 @@
 package com.thoughtworks.springbootemployee.controller;
 
+import com.thoughtworks.springbootemployee.dto.EmployeeRequest;
 import com.thoughtworks.springbootemployee.exception.IllegalParameterException;
 import com.thoughtworks.springbootemployee.exception.OperationException;
+import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import java.util.List;
 public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
+    @Autowired
+    EmployeeMapper employeeMapper;
 
     @GetMapping(params = {"page", "pageSize"})
     public Page<Employee> getEmployees(int page, int pageSize) throws IllegalParameterException {
@@ -38,13 +42,13 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public Employee addEmployee(@RequestBody Employee employee) {
-        return employeeService.addEmployee(employee);
+    public Employee addEmployee(@RequestBody EmployeeRequest employeeRequest) {
+        return employeeService.addEmployee(employeeMapper.toEmployee(employeeRequest));
     }
 
     @PutMapping("/{employeeId}")
-    public Employee updateEmployee(@PathVariable int employeeId, @RequestBody Employee employee) throws OperationException {
-        return employeeService.updateEmployee(employeeId, employee);
+    public Employee updateEmployee(@PathVariable int employeeId, @RequestBody EmployeeRequest employeeRequest) throws OperationException {
+        return employeeService.updateEmployee(employeeId, employeeMapper.toEmployee(employeeRequest));
     }
 
     @DeleteMapping("{employeeId}")
