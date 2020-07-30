@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -163,6 +164,19 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$.gender").value("male"))
                 .andExpect(jsonPath("$.salary").value(4000.0))
                 .andExpect(jsonPath("$.companyId").value(savedCompany.getCompanyId()));
+    }
+
+    @Test
+    void should_status_is_ok_hit_delete_employee_by_id_endpoint_given_employee_id() throws Exception {
+        //given
+        Company savedCompany = companyRepository.save(new Company(1, "oocl", 0, emptyList()));
+        Employee employee = employeeRepository.save(new Employee(0, "chen", 18, "female", 9999, savedCompany.getCompanyId()));
+        //when
+        ResultActions resultActions = mockMvc.perform(delete("/employees/" + employee.getId()));
+
+        //then
+        resultActions.andExpect(status().isOk());
+        assertNull(employeeRepository.findById(employee.getId()).orElse(null));
     }
 
 }
