@@ -1,6 +1,8 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.dao.EmployeeRepository;
+import com.thoughtworks.springbootemployee.exception.IllegalParameterException;
+import com.thoughtworks.springbootemployee.exception.OperationException;
 import com.thoughtworks.springbootemployee.model.Employee;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,7 +51,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void should_return_employee_list_when_getAllEmployees_given_page_and_pageSize() {
+    void should_return_employee_list_when_getAllEmployees_given_page_and_pageSize() throws IllegalParameterException {
         //given
         List<Employee> employees = new ArrayList<>();
         employees.add(new Employee(1, "mandy", 18, "female", 99999, 1));
@@ -82,8 +84,9 @@ public class EmployeeServiceTest {
         //then
         assertEquals(employee, addedEmployee);
     }
+
     @Test
-    void should_return_employee_when_update_employee_given_employee() {
+    void should_return_employee_when_update_employee_given_employee() throws OperationException {
         //given
         Employee employee = new Employee(1, "mandy", 18, "female", 99999, 1);
         Employee updateEmployee = new Employee(1, "mandy", 18, "female", 66666, 1);

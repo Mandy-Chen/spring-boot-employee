@@ -1,6 +1,8 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.dao.CompanyRepository;
+import com.thoughtworks.springbootemployee.exception.IllegalParameterException;
+import com.thoughtworks.springbootemployee.exception.OperationException;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import org.junit.jupiter.api.Test;
@@ -55,7 +57,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    void should_return_all_employee_of_company_when_get_all_employee_given_company_id() {
+    void should_return_all_employee_of_company_when_get_all_employee_given_company_id() throws OperationException {
         //given
         List<Employee> employees = new ArrayList<>();
         employees.add(new Employee(1, "alibaba1", 20, "male", 6000, 1));
@@ -70,7 +72,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    void should_return_company_list_when_getAllCompanies_given_page_and_pageSize() {
+    void should_return_company_list_when_getAllCompanies_given_page_and_pageSize() throws IllegalParameterException {
         //given
         List<Company> companies = new ArrayList<>();
         companies.add(new Company(1, "alibaba1", 100, null));
@@ -83,7 +85,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    void should_return_company_when_add_company_given_company() {
+    void should_return_company_when_add_company_given_company() throws OperationException {
         //given
         Company company = new Company(1, "alibaba", 200, null);
         given(mockedCompanyRepository.save(company)).willReturn(company);
@@ -95,7 +97,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    void should_return_company_when_update_company_given_company_Id_and_company() {
+    void should_return_company_when_update_company_given_company_Id_and_company() throws IllegalParameterException {
         //given
         Company company = new Company(1, "alibaba", 200, null);
         Company updateCompany = new Company(1, "xiaomi", 100, null);
