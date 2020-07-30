@@ -104,6 +104,7 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.content[0].employees[0].salary").value(9999))
                 .andExpect(jsonPath("$.content[0].employees[0].companyId").value(company.getCompanyId()));
     }
+
     @Test
     void should_return_company_when_hit_put_update_company_endpoint_given_company_and_companyId() throws Exception {
         //given
@@ -154,5 +155,23 @@ public class CompanyIntegrationTest {
         resultActions.andExpect(status().isOk());
         assertNull(companyRepository.findById(company.getCompanyId()).orElse(null));
     }
+
+
+    @Test
+    void should_return_company_when_hit_post_company_endpoint_given_company() throws Exception {
+        //given
+        Company company = new Company(1, "oocl", 100, emptyList());
+        //when
+        ResultActions resultActions = mockMvc.perform(post("/companies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("{ \"companyId\": %s, \"companyName\": \"%s\", \"employeesNumber\": %s }",
+                        company.getCompanyId(), company.getCompanyName(), company.getEmployeesNumber())));
+        //then
+        resultActions
+                .andExpect(jsonPath("$.companyId").isNumber())
+                .andExpect(jsonPath("$.companyName").value(company.getCompanyName()))
+                .andExpect(jsonPath("$.employeesNumber").value(company.getEmployeesNumber()));
+    }
+
 
 }

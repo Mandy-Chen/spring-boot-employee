@@ -53,6 +53,7 @@ public class CompanyService {
         if (companyId != null && company != null) {
             Company beforeCompany = companyRepository.findById(companyId).orElse(null);
             if (Objects.nonNull(beforeCompany)) {
+                beforeCompany.setCompanyId(company.getCompanyId());
                 beforeCompany.setCompanyName(company.getCompanyName());
                 beforeCompany.setEmployees(company.getEmployees());
                 beforeCompany.setEmployeesNumber(company.getEmployeesNumber());
