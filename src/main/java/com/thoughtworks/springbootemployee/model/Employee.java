@@ -14,6 +14,8 @@ public class Employee {
     private int age;
     private String gender;
     private double salary;
+    private int companyId;
+
 
     public Employee() {
     }
@@ -64,5 +66,17 @@ public class Employee {
 
     public void setSalary(double salary) {
         this.salary = salary;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public int getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(int companyId) {
+        this.companyId = companyId;
     }
 }

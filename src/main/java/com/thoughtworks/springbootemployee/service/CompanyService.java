@@ -74,4 +74,8 @@ public class CompanyService {
             }
         }
     }
+
+    public List<Company> getAllCompanies() {
+        return companyRepository.findAll();
+    }
 }
