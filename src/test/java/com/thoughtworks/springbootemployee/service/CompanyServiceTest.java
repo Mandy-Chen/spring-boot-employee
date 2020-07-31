@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -70,7 +68,7 @@ public class CompanyServiceTest {
         assertEquals(company.getEmployees(), actualEmployees);
 
     }
-
+//todo
     @Test
     void should_return_company_list_when_getAllCompanies_given_page_and_pageSize() throws IllegalParameterException {
         //given
@@ -109,6 +107,7 @@ public class CompanyServiceTest {
         assertEquals(company.getCompanyName(), updateCompany.getCompanyName());
     }
 
+    //todo
     @Test
     void should_delete_all_employees_belong_to_company_when_delete_employees_of_company_by_id_given_company_id() {
         //given
@@ -123,12 +122,4 @@ public class CompanyServiceTest {
         assertNull(company.getEmployees());
     }
 
-    @SpringBootApplication
-    public static class SpringBootEmployeeApplication {
-
-        public static void main(String[] args) {
-            SpringApplication.run(SpringBootEmployeeApplication.class, args);
-        }
-
-    }
 }

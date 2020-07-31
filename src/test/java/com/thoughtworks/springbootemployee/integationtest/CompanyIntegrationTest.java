@@ -43,7 +43,6 @@ public class CompanyIntegrationTest {
         Employee employee = employeeRepository.save(new Employee(0, "chen", 18, "female", 9999, company.getCompanyId()));
         //when
         ResultActions resultActions = mockMvc.perform(get("/companies"));
-
         //then
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -65,7 +64,6 @@ public class CompanyIntegrationTest {
         Employee employee = employeeRepository.save(new Employee(0, "chen", 18, "female", 9999, company.getCompanyId()));
         //when
         ResultActions resultActions = mockMvc.perform(get("/companies/" + company.getCompanyId()));
-
         //then
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.companyId").value(company.getCompanyId()))
@@ -88,7 +86,6 @@ public class CompanyIntegrationTest {
         Employee employee = employeeRepository.save(new Employee(0, "chen", 18, "female", 9999, company.getCompanyId()));
         //when
         ResultActions resultActions = mockMvc.perform(get(String.format("/companies?page=%d&pageSize=%d", page, pageSize)));
-
         //then
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPages").value(1))
@@ -150,7 +147,6 @@ public class CompanyIntegrationTest {
         Company company = companyRepository.save(new Company(1, "oocl", 0, emptyList()));
         //when
         ResultActions resultActions = mockMvc.perform(delete("/companies/" + company.getCompanyId()));
-
         //then
         resultActions.andExpect(status().isOk());
         assertNull(companyRepository.findById(company.getCompanyId()).orElse(null));

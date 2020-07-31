@@ -25,8 +25,9 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
+    //todo
     public Company getCompanyById(int companyId) {
-        return companyRepository.findById(companyId).get();
+        return companyRepository.findById(companyId).orElse(null);
     }
 
     public List<Employee> getAllEmployeeOfCompany(int companyId) throws OperationException {

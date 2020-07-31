@@ -1,0 +1,19 @@
+2020-07-31 12:35:56 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE EMPLOYEE(
+    ID INT NOT NULL AUTO_INCREMENT,
+    NAME VARCHAR(45),
+    GENDER VARCHAR(45),
+    AGE INT ,
+    SALARY INT ,
+    PRIMARY KEY (ID),
+   FOREIGN KEY EM_COM[*](COMPANYID) REFERENCES COMPANY(COMPANYID)
+)"; expected "("; SQL statement:
+create table employee(
+    id int not null auto_increment,
+    name varchar(45),
+    gender varchar(45),
+    age int ,
+    salary int ,
+    primary key (id),
+   foreign key em_com(companyId) references company(companyId)
+) [42001-200]
