@@ -1,11 +1,16 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.dao.CompanyRepository;
+import com.thoughtworks.springbootemployee.dto.CompanyResponse;
+import com.thoughtworks.springbootemployee.dto.EmployeeRequest;
+import com.thoughtworks.springbootemployee.dto.EmployeeResponse;
 import com.thoughtworks.springbootemployee.exception.IllegalParameterException;
 import com.thoughtworks.springbootemployee.exception.OperationException;
 import com.thoughtworks.springbootemployee.mapper.CompanyMapper;
+import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -17,43 +22,45 @@ import java.util.Objects;
 public class CompanyService {
     CompanyRepository companyRepository;
     CompanyMapper companyMapper;
+    EmployeeMapper employeeMapper;
 
-    public CompanyService(CompanyRepository companyRepository, CompanyMapper companyMapper) {
+    public CompanyService(CompanyRepository companyRepository, CompanyMapper companyMapper, EmployeeMapper employeeMapper) {
         this.companyRepository = companyRepository;
         this.companyMapper = companyMapper;
+        this.employeeMapper = employeeMapper;
     }
 
-    public Company getCompanyById(int companyId) throws OperationException {
+    public CompanyResponse getCompanyById(int companyId) throws OperationException {
         Company company = companyRepository.findById(companyId).orElse(null);
         if (Objects.isNull(company)) {
             throw new OperationException("Can't found company!");
         }
-        return company;
+        return companyMapper.toCompanyResponse(company);
     }
 
-    public List<Employee> getAllEmployeeOfCompany(int companyId) throws OperationException {
+    public List<EmployeeResponse> getAllEmployeeOfCompany(int companyId) throws OperationException {
         Company company = companyRepository.findById(companyId).orElse(null);
         if (Objects.isNull(company)) {
             throw new OperationException("Can't found company!");
         }
-        return company.getEmployees();
+        return (List<EmployeeResponse>) employeeMapper.toEmployee((EmployeeRequest) company.getEmployees());
     }
 
-    public Page<Company> getAllCompanies(Integer page, Integer pageSize) throws IllegalParameterException {
+    public Page<CompanyResponse> getAllCompanies(Integer page, Integer pageSize) throws IllegalParameterException {
         if (page < 0 || pageSize < 0) {
             throw new IllegalParameterException("page need to more than zero and page size can't less than zero!");
         }
-        return companyRepository.findAll(PageRequest.of(page - 1, pageSize));
+        return (Page<CompanyResponse>) companyMapper.toCompanyResponse((Company) companyRepository.findAll(PageRequest.of(page - 1, pageSize)));
     }
 
-    public Company addCompany(Company company) throws OperationException {
+    public CompanyResponse addCompany(Company company) throws OperationException {
         if (Objects.nonNull(company)) {
-            return companyRepository.save(company);
+            return companyMapper.toCompanyResponse(companyRepository.save(company));
         }
         throw new OperationException("Add company fail!");
     }
 
-    public Company updateCompany(Integer companyId, Company company) throws IllegalParameterException, OperationException {
+    public CompanyResponse updateCompany(Integer companyId, Company company) throws IllegalParameterException, OperationException {
         if (Objects.nonNull(companyId) && Objects.nonNull(company)) {
             Company beforeCompany = companyRepository.findById(companyId).orElse(null);
             if (Objects.nonNull(beforeCompany)) {
@@ -61,7 +68,7 @@ public class CompanyService {
                 beforeCompany.setCompanyName(company.getCompanyName());
                 beforeCompany.setEmployees(company.getEmployees());
                 beforeCompany.setEmployeesNumber(company.getEmployeesNumber());
-                return companyRepository.save(beforeCompany);
+                return companyMapper.toCompanyResponse(companyRepository.save(beforeCompany));
             } else {
                 throw new OperationException("Can't found company!");
             }
@@ -77,10 +84,10 @@ public class CompanyService {
         }
     }
 
-    public List<Company> getAllCompanies() throws OperationException {
+    public List<CompanyResponse> getAllCompanies() throws OperationException {
         if (companyRepository.findAll().isEmpty()) {
             throw new OperationException("Nothing was found！");
         }
-        return companyRepository.findAll();
+        return (List<CompanyResponse>) companyMapper.toCompanyResponse((Company) companyRepository.findAll());
     }
 }
