@@ -19,10 +19,13 @@ import java.util.List;
 @RequestMapping("/companies")
 public class CompanyController {
 
-    @Autowired
     CompanyService companyService;
-    @Autowired
     CompanyMapper companyMapper;
+
+    public CompanyController(CompanyMapper companyMapper, CompanyService companyService) {
+        this.companyMapper = companyMapper;
+        this.companyService = companyService;
+    }
 
     @GetMapping("/{companyId}")
     public Company getCompanyByCompanyId(@PathVariable int companyId) {

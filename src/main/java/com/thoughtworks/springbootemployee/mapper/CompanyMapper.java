@@ -21,4 +21,5 @@ public class CompanyMapper {
                 companyResponse.getEmployeesNumber(),
                 companyResponse.getEmployees());
     }
+
 }
