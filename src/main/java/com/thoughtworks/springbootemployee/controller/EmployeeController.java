@@ -21,38 +21,38 @@ public class EmployeeController {
     EmployeeMapper employeeMapper;
 
     @GetMapping(params = {"page", "pageSize"})
-    public Page<Employee> getEmployees(int page, int pageSize) throws IllegalParameterException {
+    public Page<Employee> getEmployees(int page, int pageSize) throws IllegalParameterException, OperationException {
         return employeeService.getAllEmployees(page, pageSize);
     }
 
     @GetMapping
-    public List<Employee> getEmployees() {
+    public List<Employee> getEmployees() throws OperationException {
         return employeeService.getAllEmployees();
     }
 
     @GetMapping(params = {"gender"})
-    public List<Employee> getEmployees(String gender) {
+    public List<Employee> getEmployees(String gender) throws IllegalParameterException, OperationException {
         return employeeService.getEmployeeByGender(gender);
     }
 
 
     @GetMapping("/{employeeId}")
-    public Employee getEmployeeById(@PathVariable int employeeId) {
+    public Employee getEmployeeById(@PathVariable int employeeId) throws IllegalParameterException, OperationException {
         return employeeService.getEmployeeById(employeeId);
     }
 
     @PostMapping
-    public Employee addEmployee(@RequestBody EmployeeRequest employeeRequest) {
+    public Employee addEmployee(@RequestBody EmployeeRequest employeeRequest) throws IllegalParameterException {
         return employeeService.addEmployee(employeeMapper.toEmployee(employeeRequest));
     }
 
     @PutMapping("/{employeeId}")
-    public Employee updateEmployee(@PathVariable int employeeId, @RequestBody EmployeeRequest employeeRequest) throws OperationException {
+    public Employee updateEmployee(@PathVariable int employeeId, @RequestBody EmployeeRequest employeeRequest) throws OperationException, IllegalParameterException {
         return employeeService.updateEmployee(employeeId, employeeMapper.toEmployee(employeeRequest));
     }
 
     @DeleteMapping("{employeeId}")
-    public void deleteEmployeeById(@PathVariable int employeeId) {
+    public void deleteEmployeeById(@PathVariable int employeeId) throws IllegalParameterException {
         employeeService.deleteEmployeeById(employeeId);
     }
 }

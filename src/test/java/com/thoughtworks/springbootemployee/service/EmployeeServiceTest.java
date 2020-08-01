@@ -29,7 +29,7 @@ public class EmployeeServiceTest {
     EmployeeService employeeService;
 
     @Test
-    void should_return_employees_list_when_getAllEmployees() {
+    void should_return_employees_list_when_getAllEmployees() throws OperationException {
         //when
         List<Employee> employees = new ArrayList<>();
         employees.add(new Employee(1, "mandy", 18, "female", 99999, 1));
@@ -40,7 +40,7 @@ public class EmployeeServiceTest {
         assertEquals(2, actualEmployees.size());
     }
     @Test
-    void should_return_employee_when_get_employ_by_id_given_employee_id() {
+    void should_return_employee_when_get_employ_by_id_given_employee_id() throws IllegalParameterException, OperationException {
         //given
         Employee employee = new Employee(1, "mandy", 18, "female", 99999, 1);
         given(mockedEmployeeRepository.findById(1)).willReturn(Optional.of(employee));
@@ -51,7 +51,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void should_return_employee_list_when_getAllEmployees_given_page_and_pageSize() throws IllegalParameterException {
+    void should_return_employee_list_when_getAllEmployees_given_page_and_pageSize() throws IllegalParameterException, OperationException {
         //given
         List<Employee> employees = new ArrayList<>();
         employees.add(new Employee(1, "mandy", 18, "female", 99999, 1));
@@ -63,7 +63,7 @@ public class EmployeeServiceTest {
         assertEquals(new PageImpl<Employee>(employees), actualEmployees);
     }
     @Test
-    void should_return_all_male_employees_when_getAllEmployees_given_gender_is_male() {
+    void should_return_all_male_employees_when_getAllEmployees_given_gender_is_male() throws IllegalParameterException, OperationException {
         //given
         List<Employee> employees = new ArrayList<>();
         employees.add(new Employee(2, "Austin", 18, "male", 99999, 1));
@@ -75,7 +75,7 @@ public class EmployeeServiceTest {
         assertEquals(employees, actualEmployees);
     }
     @Test
-    void should_return_employ_when_add_employee_given_employee() {
+    void should_return_employ_when_add_employee_given_employee() throws IllegalParameterException {
         //given
         Employee employee = new Employee(1, "mandy", 18, "female", 99999, 1);
         given(mockedEmployeeRepository.save(employee)).willReturn(employee);
@@ -86,7 +86,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void should_return_employee_when_update_employee_given_employee() throws OperationException {
+    void should_return_employee_when_update_employee_given_employee() throws OperationException, IllegalParameterException {
         //given
         Employee employee = new Employee(1, "mandy", 18, "female", 99999, 1);
         Employee updateEmployee = new Employee(1, "mandy", 18, "female", 66666, 1);
@@ -98,7 +98,7 @@ public class EmployeeServiceTest {
         assertEquals(updateEmployee1, updateEmployee);
     }
     @Test
-    void should_return_nothing_when_delete_employee_given_employeeId() {
+    void should_return_nothing_when_delete_employee_given_employeeId() throws IllegalParameterException {
         //given
         Employee employee = new Employee(1, "mandy", 18, "female", 66666, 1);
         given(mockedEmployeeRepository.findById(1)).willReturn(Optional.of(employee));

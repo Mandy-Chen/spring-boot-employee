@@ -4,7 +4,7 @@ create table employee(
     age int ,
     gender varchar(45),
     salary int ,
-    companyId int ,
-    foreign key (companyId) references company(companyId)
+    company_id int ,
+    foreign key (company_id) references company(company_id)
 
 )

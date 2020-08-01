@@ -30,19 +30,19 @@ public class CompanyServiceTest {
     CompanyService companyService;
 
     @Test
-    void should_return_company_list_when_getAllCompanies() {
+    void should_return_company_list_when_getAllCompanies() throws OperationException {
         //when
         List<Company> companies = new ArrayList<>();
         companies.add(new Company(1, "alibaba", 100, null));
         companies.add(new Company(2, "alibaba", 100, null));
         given(mockedCompanyRepository.findAll()).willReturn(companies);
-        List<Company> actualCompanies = companyService.findAllCompanies();
+        List<Company> actualCompanies = companyService.getAllCompanies();
         //then
         assertEquals(2, actualCompanies.size());
     }
 
     @Test
-    void should_return_company_when_get_company_by_id_given_company_id() {
+    void should_return_company_when_get_company_by_id_given_company_id() throws OperationException {
         //given
         Company company = new Company(1, "alibaba", 100, null);
         given(mockedCompanyRepository.findById(1)).willReturn(Optional.of(company));
@@ -95,7 +95,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    void should_return_company_when_update_company_given_company_Id_and_company() throws IllegalParameterException {
+    void should_return_company_when_update_company_given_company_Id_and_company() throws IllegalParameterException, OperationException {
         //given
         Company company = new Company(1, "alibaba", 200, null);
         Company updateCompany = new Company(1, "xiaomi", 100, null);
@@ -109,7 +109,7 @@ public class CompanyServiceTest {
 
     //todo
     @Test
-    void should_delete_all_employees_belong_to_company_when_delete_employees_of_company_by_id_given_company_id() {
+    void should_delete_all_employees_belong_to_company_when_delete_employees_of_company_by_id_given_company_id() throws IllegalParameterException {
         //given
         List<Employee> employees = new ArrayList<>();
         employees.add(new Employee(1, "ming", 10, "male", 7000, 1));

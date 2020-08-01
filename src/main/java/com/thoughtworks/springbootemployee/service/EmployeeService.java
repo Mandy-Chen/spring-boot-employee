@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +22,7 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public Employee getEmployeeById(int employeeId) throws IllegalParameterException, OperationException {
+    public Employee getEmployeeById(Integer employeeId) throws IllegalParameterException, OperationException {
         if(Objects.isNull(employeeId)){
             throw new IllegalParameterException("employeeId does not exist!");
         }
@@ -39,7 +40,7 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Employee updateEmployee(int employeeId, Employee updateEmployee) throws OperationException, IllegalParameterException {
+    public Employee updateEmployee(Integer employeeId, Employee updateEmployee) throws OperationException, IllegalParameterException {
         if(Objects.isNull(employeeId)){
             throw new IllegalParameterException("employeeId can't be empty!");
         }
@@ -55,7 +56,7 @@ public class EmployeeService {
         }
     }
 
-    public void deleteEmployeeById(int employeeId) throws IllegalParameterException {
+    public void deleteEmployeeById(Integer employeeId) throws IllegalParameterException {
         if(Objects.isNull(employeeId)){
             throw new IllegalParameterException("employeeId can't be empty!");
         }
