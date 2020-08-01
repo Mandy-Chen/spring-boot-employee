@@ -15,22 +15,34 @@ import java.util.Objects;
 @Service
 public class EmployeeService {
 
-    @Autowired
     EmployeeRepository employeeRepository;
 
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
-    public Employee getEmployeeById(int employeeId) {
-        return employeeRepository.findById(employeeId).get();
+    public Employee getEmployeeById(int employeeId) throws IllegalParameterException, OperationException {
+        if(Objects.isNull(employeeId)){
+            throw new IllegalParameterException("employeeId does not exist!");
+        }
+        Employee employee=employeeRepository.findById(employeeId).orElse(null);
+        if (Objects.isNull(employee)){
+            throw new OperationException("Can't found employee!");
+        }
+        return employee;
     }
 
-    public Employee addEmployee(Employee employee) {
+    public Employee addEmployee(Employee employee) throws IllegalParameterException {
+        if (Objects.isNull(employee)){
+            throw new IllegalParameterException("employee can't be empty!");
+        }
         return employeeRepository.save(employee);
     }
 
-    public Employee updateEmployee(int employeeId, Employee updateEmployee) throws OperationException {
+    public Employee updateEmployee(int employeeId, Employee updateEmployee) throws OperationException, IllegalParameterException {
+        if(Objects.isNull(employeeId)){
+            throw new IllegalParameterException("employeeId can't be empty!");
+        }
         Employee employee = employeeRepository.findById(employeeId).orElse(null);
         if (Objects.isNull(employee)) {
             throw new OperationException("Can't found the employee");
@@ -43,27 +55,49 @@ public class EmployeeService {
         }
     }
 
-    public void deleteEmployeeById(int employeeId) {
+    public void deleteEmployeeById(int employeeId) throws IllegalParameterException {
+        if(Objects.isNull(employeeId)){
+            throw new IllegalParameterException("employeeId can't be empty!");
+        }
         employeeRepository.deleteById(employeeId);
     }
 
-    public List<Employee> findAllEmployees() {
-        return employeeRepository.findAll();
+    public List<Employee> findAllEmployees() throws OperationException {
+        List<Employee> employees=employeeRepository.findAll();
+        if(Objects.isNull(employees)){
+            throw new OperationException("Nothing was found！");
+        }
+        return employees;
     }
 
-    public List<Employee> getEmployeeByGender(String gender) {
-        return employeeRepository.findAllByGender(gender);
+    public List<Employee> getEmployeeByGender(String gender) throws IllegalParameterException, OperationException {
+        if(Objects.isNull(gender)){
+            throw new IllegalParameterException("gender can't be empty!");
+        }
+        List<Employee> employees=employeeRepository.findAllByGender(gender);
+        if(employees.isEmpty()){
+            throw new OperationException("Nothing was found！");
+        }
+        return employees;
     }
 
-    public Page<Employee> getAllEmployees(int page, int pageSize) throws IllegalParameterException {
-        if (page < 1 || pageSize < 0) {
+    public Page<Employee> getAllEmployees(int page, int pageSize) throws IllegalParameterException, OperationException {
+        if (page < 0 || pageSize < 0) {
             throw new IllegalParameterException("page need to more than zero and page size can't less than zero");
         }
-        return employeeRepository.findAll(PageRequest.of(page - 1, pageSize));
+        Page<Employee> employees = employeeRepository.findAll(PageRequest.of(page - 1, pageSize));
+        if (employees.isEmpty()){
+            throw new OperationException("Nothing was found！");
+        }
+        return employees;
     }
 
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+    public List<Employee> getAllEmployees() throws OperationException {
+        List<Employee> employees=employeeRepository.findAll();
+        if(employees.isEmpty()){
+            throw new OperationException("Nothing was found！");
+        }
+        return employees;
     }
 
 

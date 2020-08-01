@@ -28,7 +28,7 @@ public class CompanyController {
     }
 
     @GetMapping("/{companyId}")
-    public Company getCompanyByCompanyId(@PathVariable int companyId) {
+    public Company getCompanyByCompanyId(@PathVariable int companyId) throws OperationException {
         return companyService.getCompanyById(companyId);
     }
 
@@ -38,7 +38,7 @@ public class CompanyController {
     }
 
     @GetMapping
-    public List<Company> getAllCompanies() {
+    public List<Company> getAllCompanies() throws OperationException {
         return companyService.getAllCompanies();
     }
 
@@ -55,13 +55,13 @@ public class CompanyController {
 
     @PutMapping("/{companyId}")
     @ResponseStatus(HttpStatus.OK)
-    public Company updateCompany(@PathVariable Integer companyId, @RequestBody CompanyRequest companyRequest) throws IllegalParameterException {
+    public Company updateCompany(@PathVariable Integer companyId, @RequestBody CompanyRequest companyRequest) throws IllegalParameterException, OperationException {
         return companyService.updateCompany(companyId, companyMapper.toCompany(companyRequest));
     }
 
     @DeleteMapping("/{companyId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteEmployeesOfCompanyById(@PathVariable Integer companyId) {
+    public void deleteEmployeesOfCompanyById(@PathVariable Integer companyId) throws IllegalParameterException {
         companyService.deleteEmployeesOfCompanyById(companyId);
     }
 }
