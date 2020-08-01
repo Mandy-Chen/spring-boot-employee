@@ -15,12 +15,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 public class CompanyServiceTest {
@@ -68,14 +73,16 @@ public class CompanyServiceTest {
         assertEquals(company.getEmployees(), actualEmployees);
 
     }
-//todo
     @Test
-    void should_return_company_list_when_getAllCompanies_given_page_and_pageSize() throws IllegalParameterException {
+    void should_return_company_list_when_getAllCompanies_given_page_and_pageSize() throws IllegalParameterException, OperationException {
         //given
         List<Company> companies = new ArrayList<>();
-        companies.add(new Company(1, "alibaba1", 100, null));
-        companies.add(new Company(2, "alibaba2", 100, null));
-        given(mockedCompanyRepository.findAll(PageRequest.of(1, 2))).willReturn(new PageImpl<Company>(companies));
+        Company firstCompany=new Company(1, "alibaba1", 100, null);
+        Company secondCompany=new Company(2, "alibaba1", 100, null);
+        mockedCompanyRepository.save(firstCompany);
+        mockedCompanyRepository.save(secondCompany);
+        companies=Arrays.asList(firstCompany,secondCompany);
+        given(mockedCompanyRepository.findAll(isA(PageRequest.class))).willReturn(new PageImpl<Company>(companies));
         //when
         Page<Company> actualCompanies = companyService.getAllCompanies(1, 2);
         //then
@@ -99,6 +106,7 @@ public class CompanyServiceTest {
         //given
         Company company = new Company(1, "alibaba", 200, null);
         Company updateCompany = new Company(1, "xiaomi", 100, null);
+
         given(mockedCompanyRepository.findById(1)).willReturn(Optional.of(company));
         given(mockedCompanyRepository.save(updateCompany)).willReturn(updateCompany);
         //when
@@ -107,7 +115,6 @@ public class CompanyServiceTest {
         assertEquals(company.getCompanyName(), updateCompany.getCompanyName());
     }
 
-    //todo
     @Test
     void should_delete_all_employees_belong_to_company_when_delete_employees_of_company_by_id_given_company_id() throws IllegalParameterException {
         //given
@@ -119,7 +126,7 @@ public class CompanyServiceTest {
         //when
         companyService.deleteEmployeesOfCompanyById(1);
         //then
-        assertNull(company.getEmployees());
+        verify(mockedCompanyRepository,times(1)).deleteById(1);
     }
 
 }

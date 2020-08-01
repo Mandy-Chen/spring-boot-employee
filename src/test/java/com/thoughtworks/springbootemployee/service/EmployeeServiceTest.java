@@ -54,9 +54,9 @@ public class EmployeeServiceTest {
     void should_return_employee_list_when_getAllEmployees_given_page_and_pageSize() throws IllegalParameterException, OperationException {
         //given
         List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee(1, "mandy", 18, "female", 99999, 1));
-        employees.add(new Employee(2, "Austin", 18, "male", 99999, 1));
-        given(mockedEmployeeRepository.findAll(PageRequest.of(1, 2))).willReturn(new PageImpl<Employee>(employees));
+        employees.add(mockedEmployeeRepository.save(new Employee(1, "mandy", 18, "female", 99999, 1)));
+        employees.add(mockedEmployeeRepository.save(new Employee(2, "Austin", 18, "male", 99999, 1)));
+        given(mockedEmployeeRepository.findAll(isA(PageRequest.class))).willReturn(new PageImpl<Employee>(employees));
         //when
         Page<Employee> actualEmployees = employeeService.getAllEmployees(1, 2);
         //then
@@ -89,7 +89,7 @@ public class EmployeeServiceTest {
     void should_return_employee_when_update_employee_given_employee() throws OperationException, IllegalParameterException {
         //given
         Employee employee = new Employee(1, "mandy", 18, "female", 99999, 1);
-        Employee updateEmployee = new Employee(1, "mandy", 18, "female", 66666, 1);
+        Employee updateEmployee = new Employee(1, "chen", 18, "female", 66666, 1);
         given(mockedEmployeeRepository.findById(1)).willReturn(Optional.of(employee));
         given(mockedEmployeeRepository.save(isA(Employee.class))).willReturn(updateEmployee);
         //when

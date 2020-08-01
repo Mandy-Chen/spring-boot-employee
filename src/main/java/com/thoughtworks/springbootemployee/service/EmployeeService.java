@@ -1,8 +1,10 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.dao.EmployeeRepository;
+import com.thoughtworks.springbootemployee.dto.EmployeeResponse;
 import com.thoughtworks.springbootemployee.exception.IllegalParameterException;
 import com.thoughtworks.springbootemployee.exception.OperationException;
+import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
 import com.thoughtworks.springbootemployee.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,9 +19,11 @@ import java.util.Objects;
 public class EmployeeService {
 
     EmployeeRepository employeeRepository;
+    EmployeeMapper employeeMapper;
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper) {
         this.employeeRepository = employeeRepository;
+        this.employeeMapper = employeeMapper;
     }
 
     public Employee getEmployeeById(Integer employeeId) throws IllegalParameterException, OperationException {
@@ -37,7 +41,7 @@ public class EmployeeService {
         if (Objects.isNull(employee)){
             throw new IllegalParameterException("employee can't be empty!");
         }
-        return employeeRepository.save(employee);
+        return employee;
     }
 
     public Employee updateEmployee(Integer employeeId, Employee updateEmployee) throws OperationException, IllegalParameterException {
@@ -52,7 +56,7 @@ public class EmployeeService {
             employee.setGender(updateEmployee.getGender());
             employee.setName(updateEmployee.getName());
             employee.setSalary(updateEmployee.getSalary());
-            return employeeRepository.save(employee);
+            return  employeeRepository.save(employee);
         }
     }
 
@@ -86,8 +90,8 @@ public class EmployeeService {
         if (page < 0 || pageSize < 0) {
             throw new IllegalParameterException("page need to more than zero and page size can't less than zero");
         }
-        Page<Employee> employees = employeeRepository.findAll(PageRequest.of(page - 1, pageSize));
-        if (employees.isEmpty()){
+        Page<Employee> employees = employeeRepository.findAll(PageRequest.of(page-1 , pageSize));
+        if (Objects.isNull(employees)){
             throw new OperationException("Nothing was found！");
         }
         return employees;
@@ -98,7 +102,7 @@ public class EmployeeService {
         if(employees.isEmpty()){
             throw new OperationException("Nothing was found！");
         }
-        return employees;
+        return (employees);
     }
 
 

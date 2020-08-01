@@ -28,9 +28,9 @@ public class EmployeeMapperTest {
     void should_get_employee_when_mapper_given_employee_response() {
         //given
         EmployeeMapper employeeMapper = new EmployeeMapper();
-        EmployeeResponse employeeResponse = new EmployeeResponse(0, "chen", 18, "female", 9999, 1);
+        Employee employee = new Employee(0, "chen", 18, "female", 9999, 1);
         //when
-        Employee employee = employeeMapper.toEmployee(employeeResponse);
+        EmployeeResponse employeeResponse = employeeMapper.toEmployeeResponse(employee);
         //then
         assertEquals(employeeResponse.getId(), employee.getId());
         assertEquals(employeeResponse.getAge(), employee.getAge());

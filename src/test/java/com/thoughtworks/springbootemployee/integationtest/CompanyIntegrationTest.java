@@ -89,7 +89,7 @@ public class CompanyIntegrationTest {
         //then
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPages").value(1))
-                .andExpect(jsonPath("$.number").value(page - 1))
+                .andExpect(jsonPath("$.number").value(page-1))
                 .andExpect(jsonPath("$.size").value(pageSize))
                 .andExpect(jsonPath("$.content[0].companyId").value(company.getCompanyId()))
                 .andExpect(jsonPath("$.content[0].companyName").value(company.getCompanyName()))
@@ -101,6 +101,8 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.content[0].employees[0].salary").value(9999))
                 .andExpect(jsonPath("$.content[0].employees[0].companyId").value(company.getCompanyId()));
     }
+
+
 
     @Test
     void should_return_company_when_hit_put_update_company_endpoint_given_company_and_companyId() throws Exception {

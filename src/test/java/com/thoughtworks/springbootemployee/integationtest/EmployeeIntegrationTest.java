@@ -63,9 +63,9 @@ public class EmployeeIntegrationTest {
         Company company = new Company(1, "oocl", 0, emptyList());
         Company savedCompany = companyRepository.save(company);
         Employee employee = new Employee(0, "chen", 18, "female", 9999, savedCompany.getCompanyId());
-        employeeRepository.save(employee);
+        Employee savedEmployee=employeeRepository.save(employee);
         //when
-        ResultActions resultActions = mockMvc.perform(get("/employees/1"));
+        ResultActions resultActions = mockMvc.perform(get("/employees/"+savedEmployee.getId()));
 
         //then
         resultActions.andExpect(status().isOk())
@@ -85,14 +85,14 @@ public class EmployeeIntegrationTest {
         int pageSize = 2;
         Company company = new Company(1, "oocl", 0, emptyList());
         Company savedCompany = companyRepository.save(company);
-        Employee employee = new Employee(0, "chen", 18, "female", 9999, savedCompany.getCompanyId());
+        Employee employee = new Employee(1, "chen", 18, "female", 9999, savedCompany.getCompanyId());
         employeeRepository.save(employee);
         //when
         ResultActions resultActions = mockMvc.perform(get(String.format("/employees?page=%d&pageSize=%d", page, pageSize)));
         //then
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPages").value(1))
-                .andExpect(jsonPath("$.number").value(page - 1))
+                .andExpect(jsonPath("$.number").value(page-1))
                 .andExpect(jsonPath("$.size").value(pageSize))
                 .andExpect(jsonPath("$.content[0].id").isNumber())
                 .andExpect(jsonPath("$.content[0].name").value("chen"))

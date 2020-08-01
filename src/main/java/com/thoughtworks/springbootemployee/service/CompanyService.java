@@ -10,7 +10,6 @@ import com.thoughtworks.springbootemployee.mapper.CompanyMapper;
 import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -30,37 +29,42 @@ public class CompanyService {
         this.employeeMapper = employeeMapper;
     }
 
-    public CompanyResponse getCompanyById(int companyId) throws OperationException {
+    public Company getCompanyById(int companyId) throws OperationException {
         Company company = companyRepository.findById(companyId).orElse(null);
         if (Objects.isNull(company)) {
             throw new OperationException("Can't found company!");
         }
-        return companyMapper.toCompanyResponse(company);
+        return company;
     }
 
-    public List<EmployeeResponse> getAllEmployeeOfCompany(int companyId) throws OperationException {
+    public List<Employee> getAllEmployeeOfCompany(int companyId) throws OperationException {
         Company company = companyRepository.findById(companyId).orElse(null);
         if (Objects.isNull(company)) {
             throw new OperationException("Can't found company!");
         }
-        return (List<EmployeeResponse>) employeeMapper.toEmployee((EmployeeRequest) company.getEmployees());
+        return company.getEmployees();
     }
 
-    public Page<CompanyResponse> getAllCompanies(Integer page, Integer pageSize) throws IllegalParameterException {
+    public Page<Company> getAllCompanies(Integer page, Integer pageSize) throws IllegalParameterException, OperationException {
         if (page < 0 || pageSize < 0) {
             throw new IllegalParameterException("page need to more than zero and page size can't less than zero!");
         }
-        return (Page<CompanyResponse>) companyMapper.toCompanyResponse((Company) companyRepository.findAll(PageRequest.of(page - 1, pageSize)));
+        Page<Company> companies = companyRepository.findAll(PageRequest.of(page-1 , pageSize));
+        if(Objects.isNull(companyRepository.findAll())){
+            throw new OperationException("Can't found company11111111!");
+        }
+        return companies;
     }
 
-    public CompanyResponse addCompany(Company company) throws OperationException {
+
+    public Company addCompany(Company company) throws OperationException {
         if (Objects.nonNull(company)) {
-            return companyMapper.toCompanyResponse(companyRepository.save(company));
+            return companyRepository.save(company);
         }
         throw new OperationException("Add company fail!");
     }
 
-    public CompanyResponse updateCompany(Integer companyId, Company company) throws IllegalParameterException, OperationException {
+    public Company updateCompany(Integer companyId, Company company) throws IllegalParameterException, OperationException {
         if (Objects.nonNull(companyId) && Objects.nonNull(company)) {
             Company beforeCompany = companyRepository.findById(companyId).orElse(null);
             if (Objects.nonNull(beforeCompany)) {
@@ -68,7 +72,7 @@ public class CompanyService {
                 beforeCompany.setCompanyName(company.getCompanyName());
                 beforeCompany.setEmployees(company.getEmployees());
                 beforeCompany.setEmployeesNumber(company.getEmployeesNumber());
-                return companyMapper.toCompanyResponse(companyRepository.save(beforeCompany));
+                return companyRepository.save(beforeCompany);
             } else {
                 throw new OperationException("Can't found company!");
             }
@@ -84,10 +88,10 @@ public class CompanyService {
         }
     }
 
-    public List<CompanyResponse> getAllCompanies() throws OperationException {
+    public List<Company> getAllCompanies() throws OperationException {
         if (companyRepository.findAll().isEmpty()) {
             throw new OperationException("Nothing was found！");
         }
-        return (List<CompanyResponse>) companyMapper.toCompanyResponse((Company) companyRepository.findAll());
+        return companyRepository.findAll();
     }
 }

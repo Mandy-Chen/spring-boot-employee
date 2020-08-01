@@ -16,7 +16,7 @@ public class CompanyMapper {
                 companyRequest.getEmployees());
     }
 
-    public CompanyResponse toCompanyResponse(Company company) {
+    public static CompanyResponse toCompanyResponse(Company company) {
         CompanyResponse companyResponse = new CompanyResponse();
         BeanUtils.copyProperties(company, companyResponse);
         return companyResponse;

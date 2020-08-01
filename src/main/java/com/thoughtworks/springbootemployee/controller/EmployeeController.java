@@ -1,6 +1,7 @@
 package com.thoughtworks.springbootemployee.controller;
 
 import com.thoughtworks.springbootemployee.dto.EmployeeRequest;
+import com.thoughtworks.springbootemployee.dto.EmployeeResponse;
 import com.thoughtworks.springbootemployee.exception.IllegalParameterException;
 import com.thoughtworks.springbootemployee.exception.OperationException;
 import com.thoughtworks.springbootemployee.mapper.EmployeeMapper;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/employees")
@@ -26,29 +28,29 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<Employee> getEmployees() throws OperationException {
-        return employeeService.getAllEmployees();
+    public List<EmployeeResponse> getEmployees() throws OperationException {
+        return  employeeService.getAllEmployees().stream().map(EmployeeMapper::toEmployeeResponse).collect(Collectors.toList());
     }
 
     @GetMapping(params = {"gender"})
-    public List<Employee> getEmployees(String gender) throws IllegalParameterException, OperationException {
-        return employeeService.getEmployeeByGender(gender);
+    public List<EmployeeResponse> getEmployees(String gender) throws IllegalParameterException, OperationException {
+        return employeeService.getEmployeeByGender(gender).stream().map(EmployeeMapper::toEmployeeResponse).collect(Collectors.toList());
     }
 
 
     @GetMapping("/{employeeId}")
-    public Employee getEmployeeById(@PathVariable int employeeId) throws IllegalParameterException, OperationException {
-        return employeeService.getEmployeeById(employeeId);
+    public EmployeeResponse getEmployeeById(@PathVariable int employeeId) throws IllegalParameterException, OperationException {
+        return EmployeeMapper.toEmployeeResponse(employeeService.getEmployeeById(employeeId));
     }
 
     @PostMapping
-    public Employee addEmployee(@RequestBody EmployeeRequest employeeRequest) throws IllegalParameterException {
-        return employeeService.addEmployee(employeeMapper.toEmployee(employeeRequest));
+    public EmployeeResponse addEmployee(@RequestBody EmployeeRequest employeeRequest) throws IllegalParameterException {
+        return EmployeeMapper.toEmployeeResponse(employeeService.addEmployee(employeeMapper.toEmployee(employeeRequest)));
     }
 
     @PutMapping("/{employeeId}")
-    public Employee updateEmployee(@PathVariable int employeeId, @RequestBody EmployeeRequest employeeRequest) throws OperationException, IllegalParameterException {
-        return employeeService.updateEmployee(employeeId, employeeMapper.toEmployee(employeeRequest));
+    public EmployeeResponse updateEmployee(@PathVariable int employeeId, @RequestBody EmployeeRequest employeeRequest) throws OperationException, IllegalParameterException {
+        return EmployeeMapper.toEmployeeResponse(employeeService.updateEmployee(employeeId, employeeMapper.toEmployee(employeeRequest)));
     }
 
     @DeleteMapping("{employeeId}")

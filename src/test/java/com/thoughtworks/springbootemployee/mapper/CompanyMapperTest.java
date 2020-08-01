@@ -28,9 +28,9 @@ public class CompanyMapperTest {
     void should_get_company_when_mapper_given_company_response() {
         //given
         CompanyMapper companyMapper = new CompanyMapper();
-        CompanyResponse companyResponse = new CompanyResponse(0, "oocl", 100, emptyList());
+        Company company  = new Company(0, "oocl", 100, emptyList());
         //when
-        Company company = companyMapper.toCompany(companyResponse);
+        CompanyResponse companyResponse = companyMapper.toCompanyResponse(company);
         //then
         assertEquals(companyResponse.getCompanyId(), company.getCompanyId());
         assertEquals(companyResponse.getCompanyName(), company.getCompanyName());
