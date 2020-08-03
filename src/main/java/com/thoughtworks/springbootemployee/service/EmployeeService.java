@@ -11,9 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.management.openmbean.OpenDataException;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Objects;
+
+import static java.util.Objects.isNull;
 
 @Service
 public class EmployeeService {
@@ -27,61 +30,59 @@ public class EmployeeService {
     }
 
     public Employee getEmployeeById(Integer employeeId) throws IllegalParameterException, OperationException {
-        if(Objects.isNull(employeeId)){
+        if (isNull(employeeId)) {
             throw new IllegalParameterException("employeeId does not exist!");
         }
-        Employee employee=employeeRepository.findById(employeeId).orElse(null);
-        if (Objects.isNull(employee)){
-            throw new OperationException("Can't found employee!");
-        }
-        return employee;
+        return employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new OperationException("Can't found employee!"));
     }
 
     public Employee addEmployee(Employee employee) throws IllegalParameterException {
-        if (Objects.isNull(employee)){
+        if (isNull(employee)) {
             throw new IllegalParameterException("employee can't be empty!");
         }
-        return employee;
+        return employeeRepository.save(employee);
     }
 
     public Employee updateEmployee(Integer employeeId, Employee updateEmployee) throws OperationException, IllegalParameterException {
-        if(Objects.isNull(employeeId)){
+        if (isNull(employeeId)) {
             throw new IllegalParameterException("employeeId can't be empty!");
         }
         Employee employee = employeeRepository.findById(employeeId).orElse(null);
-        if (Objects.isNull(employee)) {
+        if (isNull(employee)) {
             throw new OperationException("Can't found the employee");
         } else {
             employee.setAge(updateEmployee.getAge());
             employee.setGender(updateEmployee.getGender());
             employee.setName(updateEmployee.getName());
             employee.setSalary(updateEmployee.getSalary());
-            return  employeeRepository.save(employee);
+            return employeeRepository.save(employee);
         }
     }
 
     public void deleteEmployeeById(Integer employeeId) throws IllegalParameterException {
-        if(Objects.isNull(employeeId)){
+        if (isNull(employeeId)) {
             throw new IllegalParameterException("employeeId can't be empty!");
         }
         employeeRepository.deleteById(employeeId);
     }
 
     public List<Employee> findAllEmployees() throws OperationException {
-        List<Employee> employees=employeeRepository.findAll();
-        if(Objects.isNull(employees)){
-            throw new OperationException("Nothing was found！");
+
+        List<Employee> employees = employeeRepository.findAll();
+        if (employees.isEmpty()) {
+            throw new OperationException("Nothing was found!");
         }
         return employees;
     }
 
     public List<Employee> getEmployeeByGender(String gender) throws IllegalParameterException, OperationException {
-        if(Objects.isNull(gender)){
+        if (isNull(gender)) {
             throw new IllegalParameterException("gender can't be empty!");
         }
-        List<Employee> employees=employeeRepository.findAllByGender(gender);
-        if(employees.isEmpty()){
-            throw new OperationException("Nothing was found！");
+        List<Employee> employees = employeeRepository.findAllByGender(gender);
+        if (employees.isEmpty()) {
+            throw new OperationException("Nothing was found!");
         }
         return employees;
     }
@@ -90,17 +91,17 @@ public class EmployeeService {
         if (page < 0 || pageSize < 0) {
             throw new IllegalParameterException("page need to more than zero and page size can't less than zero");
         }
-        Page<Employee> employees = employeeRepository.findAll(PageRequest.of(page-1 , pageSize));
-        if (Objects.isNull(employees)){
-            throw new OperationException("Nothing was found！");
+        Page<Employee> employees = employeeRepository.findAll(PageRequest.of(page - 1, pageSize));
+        if (employees.isEmpty()) {
+            throw new OperationException("Nothing was found!");
         }
         return employees;
     }
 
     public List<Employee> getAllEmployees() throws OperationException {
-        List<Employee> employees=employeeRepository.findAll();
-        if(employees.isEmpty()){
-            throw new OperationException("Nothing was found！");
+        List<Employee> employees = employeeRepository.findAll();
+        if (employees.isEmpty()) {
+            throw new OperationException("Nothing was found!");
         }
         return (employees);
     }
